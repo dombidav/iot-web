@@ -64,16 +64,16 @@ Plugins
 - Device
 
 ### Plugin Controllers:
-- POST: Authenticate Worker
+- POST: AuthenticateWorker
   - Parameter: Worker.RFID, Device.ID
   - Returns: OK / FAIL
-- GET: Thermometer Data
+- GET: ThermometerData
   - Parameter: Device.ID, User.ID
   - Returns: (float) Temperature
-- GET: Fan data
+- GET: FanData
   - Parameter: Device.ID, User.ID
   - Returns: (float) RPM
-- PUT: Fan data
+- PUT: FanData
   - Parameter: Device.ID, User.ID, (float) Rotation
   - Returns: -
 - GET: Heating data
