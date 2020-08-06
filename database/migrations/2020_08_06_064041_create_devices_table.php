@@ -15,6 +15,7 @@ class CreateDevicesTable extends Migration
     {
         Schema::create('devices', function (Blueprint $table) {
             $table->string('name');
+            $table->integer('category')->default(0);
             $table->timestamps();
         });
     }
