@@ -26,14 +26,13 @@ Route::get('/thermo/{device_id}/{user_id}','ThermometerDataController@show')->na
 
 Route::get('/Fan/{device_id}/{user_id}','FandataController@show')->name("Fan_show");
 
-Route::put('/Fanauth','FandataController@show')->name("Fan_show");
-
+Route::put('/Fanauth','FandataController@show');
 
 
 Route::get('/Heat/{device_id}/{user_id}','HeatingDataController@show')->name("Heat_show");
 
 
-Route::put('/Heating','HeatingdataController@show')->name("Fan_show");
+Route::put('/Heat','HeatingdataController@show')->name("Heat_show");
 
 
 Route::get('/Camera/{device_id}/{user_id}','CameraController@show')->name("Camera_show");
