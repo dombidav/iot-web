@@ -4,6 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @method static paginate(int $int)
+ */
 class DeviceResource extends JsonResource
 {
     /**
