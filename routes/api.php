@@ -21,25 +21,26 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/workerauth','AuthenticateWorkerController@auth')->name("workerauth");
 
+Route::get('/fan/{device}/{user}','FanController@show')->name("fan.show"); // Finds {Device}, authenticates {user}, gets the fan speed
 
-Route::get('/thermo/{device_id}/{user_id}','ThermometerDataController@show')->name("thermo_show");
-
-Route::get('/Fan/{device_id}/{user_id}','FandataController@show')->name("fan_show");
-
-Route::put('/Fan/{device_id}/{user_id}','FandataController@update')->name("fan_update");
+Route::put('/fan/{device}/{user}','FanController@update')->name("fan.update"); // Finds {Device}, authenticates {user}, sets the thermometer value
 
 
-Route::get('/Heat/{device_id}/{user_id}','HeatingDataController@show')->name("heat_show");
+Route::get('/heat/{device}/{user}','HeatingController@show')->name("heat.show"); // Finds {Device}, authenticates {user}, gets the heating status and thermometer data
 
 
-Route::put('/Heat/{device_id}/{user_id}','HeatingdataController@update')->name("heat_update");
+Route::put('/heat/{device}/{user}','HeatingController@update')->name("heat.update"); // Finds {Device}, authenticates {user}, sets the heating status
 
 
-Route::get('/Camera/{device_id}/{user_id}','CameraController@show')->name("camera_show");
+Route::get('/camera/{device}/{user}','CameraController@show')->name("camera.show"); // Finds {Device}, authenticates {user}, gets the camera stream
 
 
 Route::resource('worker','WorkerController');
 Route::resource('workergroup','WorkerGroupController');
+
+Route::resource('device', 'DeviceController')->except(['index']);
+Route::get('/devices/{category?}', 'DeviceController@index')->name('device.index');
+
 Route::resource('lock','LockController');
 Route::resource('log', 'LogController');
 
