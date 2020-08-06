@@ -12,12 +12,12 @@ class LogController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection|\Illuminate\Http\Response
      */
     public function index()
     {
         $log=Log::paginate(15);
-        return response(LogResource::collection($log));
+        return LogResource::collection($log);
     }
 
     /**
@@ -34,7 +34,7 @@ class LogController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return LogResource|\Illuminate\Http\Response
      */
     public function store(Request $request)
     {
@@ -45,7 +45,7 @@ class LogController extends Controller
         $log->model=$request->input('model');
 
         if($log->save()){
-            return response(new LogResource($log));
+            return new LogResource($log);
         }
     }
 
@@ -53,12 +53,11 @@ class LogController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Log  $log
-     * @return \Illuminate\Http\Response
+     * @return LogResource|\Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Log $log)
     {
-        $log=Log::findOrFail($id);
-        return response(new LogResource($log));
+        return new LogResource($log);
     }
 
     /**
@@ -77,32 +76,31 @@ class LogController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Log  $log
-     * @return \Illuminate\Http\Response
+     * @return LogResource|\Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Log $log)
     {
-        $log=Log::findOrFail($id);
         $log->person_id=$request->filled('person_id')? $request->input('person_id') : $log->person_id;
         $log->subject_id=$request->filled('subject_id')? $request->input('subject_id') : $log->subject_id;
         $log->description=$request->filled('description')? $request->input('description') : $log->description;
         $log->model=$request->filled('model')?$request->input('model'):$log->model;
 
         if($log->save()){
-            return response(new LogResource($log));
+            return new LogResource($log);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Log  $log
-     * @return \Illuminate\Http\Response
+     * @param \App\Log $log
+     * @return \Illuminate\Http\Response|string
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(Log $log)
     {
-        $log=Log::findOrFail($id);
         if($log->delete()){
-            return response("Log deleted");
+            return "Log deleted";
         }
     }
 }
