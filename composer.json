@@ -15,7 +15,8 @@
         "jenssegers/mongodb": "dev-develop",
         "laravel/framework": "^7.22.2",
         "laravel/tinker": "^2.0",
-        "laravel/ui": "^2.1"
+        "laravel/ui": "^2.1",
+        "spatie/enum": "^3.0"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
