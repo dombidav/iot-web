@@ -18,14 +18,5 @@ Route::get('/', function () {
 });
 
 
-Route::get($uri , $calllback);
 
-
-Route::get('foo', function () {
-    return 'Hello World';
-});
-
-Route::post("Authenticate Worker",function(){
-   return 
-});
 
