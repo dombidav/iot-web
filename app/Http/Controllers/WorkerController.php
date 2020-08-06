@@ -56,8 +56,7 @@ class WorkerController extends Controller
      */
     public function show(Worker $worker)
     {
-        $workerObject = Worker::findOrFail($worker);
-        return new WorkerResource($workerObject);
+        return new WorkerResource($worker);
     }
 
     /**
@@ -80,13 +79,11 @@ class WorkerController extends Controller
      */
     public function update(Request $request, Worker $worker)
     {
-        $workerObject = Worker::findOrFail($worker);
+        $worker->name = $request->input('name');
+        $worker->rfid = $request->input('rfid'); //TODO
 
-        $workerObject->name = $request->input('name');
-        $workerObject->rfid = $request->input('rfid'); //TODO
-
-        if($workerObject->save()) {
-            return new WorkerResource($workerObject);
+        if($worker->save()) {
+            return new WorkerResource($worker);
         }
     }
 
@@ -98,8 +95,6 @@ class WorkerController extends Controller
      */
     public function destroy(Worker $worker)
     {
-        $worker = Worker::findOrFail($worker);
-
         if($worker->delete()) {
             return new WorkerResource($worker);
         }
