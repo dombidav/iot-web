@@ -14,7 +14,7 @@ class CreateWorkerGroupsTable extends Migration
     public function up()
     {
         Schema::create('worker_groups', function (Blueprint $table) {
-            $table->id();
+            $table->text('name');
             $table->timestamps();
         });
     }

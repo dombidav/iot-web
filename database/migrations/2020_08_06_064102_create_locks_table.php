@@ -14,7 +14,7 @@ class CreateLocksTable extends Migration
     public function up()
     {
         Schema::create('locks', function (Blueprint $table) {
-            $table->id();
+            $table->text('name');
             $table->timestamps();
         });
     }
