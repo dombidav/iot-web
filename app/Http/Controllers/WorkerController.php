@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Worker;
 use Illuminate\Http\Request;
+use App\Http\Requests;
+use App\Http\Resources\WorkerResource;
 
 class WorkerController extends Controller
 {
@@ -14,7 +16,8 @@ class WorkerController extends Controller
      */
     public function index()
     {
-        //
+        $workers = Worker::paginate(20);
+        return WorkerResource::collection($workers);
     }
 
     /**
@@ -35,7 +38,14 @@ class WorkerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $worker = new Worker;
+
+        $worker->name = $request->input('name');
+        $worker->rfid = $request->input('rfid'); //TODO
+
+        if($worker->save()) {
+            return new WorkerResource($worker);
+        }
     }
 
     /**
@@ -46,7 +56,8 @@ class WorkerController extends Controller
      */
     public function show(Worker $worker)
     {
-        //
+        $workerObject = Worker::findOrFail($worker);
+        return new WorkerResource($workerObject);
     }
 
     /**
@@ -69,7 +80,14 @@ class WorkerController extends Controller
      */
     public function update(Request $request, Worker $worker)
     {
-        //
+        $workerObject = Worker::findOrFail($worker);
+
+        $workerObject->name = $request->input('name');
+        $workerObject->rfid = $request->input('rfid'); //TODO
+
+        if($workerObject->save()) {
+            return new WorkerResource($workerObject);
+        }
     }
 
     /**
@@ -80,6 +98,10 @@ class WorkerController extends Controller
      */
     public function destroy(Worker $worker)
     {
-        //
+        $worker = Worker::findOrFail($worker);
+
+        if($worker->delete()) {
+            return new WorkerResource($worker);
+        }
     }
 }
