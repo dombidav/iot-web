@@ -11,6 +11,6 @@ class WorkerGroupSeeder extends Seeder
      */
     public function run()
     {
-        //
+        factory(App\WorkerGroup::class, 30)->create();
     }
 }

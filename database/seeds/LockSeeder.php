@@ -11,6 +11,6 @@ class LockSeeder extends Seeder
      */
     public function run()
     {
-        //
+        factory(App\Lock::class, 30)->create();
     }
 }
