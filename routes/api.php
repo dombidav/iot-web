@@ -41,6 +41,7 @@ Route::get('/Camera/{device_id}/{user_id}','CameraController@show')->name("camer
 Route::resource('worker','WorkerController');
 Route::resource('workergroup','WorkerGroupController');
 Route::resource('lock','LockController');
+Route::resource('log', 'LogController');
 
 
 
