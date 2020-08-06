@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Log;
 use Illuminate\Http\Request;
+use App\Http\Resources;
+use App\Http\Resources\LogResource;
 
 class LogController extends Controller
 {
@@ -14,7 +16,8 @@ class LogController extends Controller
      */
     public function index()
     {
-        //
+        $log=Log::paginate(15);
+        return response(LogResource::collection($log));
     }
 
     /**
@@ -35,7 +38,15 @@ class LogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $log=new Log();
+        $log->person_id=$request->input('person_id');
+        $log->subject_id=$request->input('subject_id');
+        $log->description=$request->input('description');
+        $log->model=$request->input('model');
+
+        if($log->save()){
+            return response(new LogResource($log));
+        }
     }
 
     /**
@@ -44,9 +55,10 @@ class LogController extends Controller
      * @param  \App\Log  $log
      * @return \Illuminate\Http\Response
      */
-    public function show(Log $log)
+    public function show($id)
     {
-        //
+        $log=Log::findOrFail($id);
+        return response(new LogResource($log));
     }
 
     /**
@@ -67,9 +79,17 @@ class LogController extends Controller
      * @param  \App\Log  $log
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Log $log)
+    public function update(Request $request, $id)
     {
-        //
+        $log=Log::findOrFail($id);
+        $log->person_id=$request->filled('person_id')? $request->input('person_id') : $log->person_id;
+        $log->subject_id=$request->filled('subject_id')? $request->input('subject_id') : $log->subject_id;
+        $log->description=$request->filled('description')? $request->input('description') : $log->description;
+        $log->model=$request->filled('model')?$request->input('model'):$log->model;
+
+        if($log->save()){
+            return response(new LogResource($log));
+        }
     }
 
     /**
@@ -78,8 +98,11 @@ class LogController extends Controller
      * @param  \App\Log  $log
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Log $log)
+    public function destroy($id)
     {
-        //
+        $log=Log::findOrFail($id);
+        if($log->delete()){
+            return response("Log deleted");
+        }
     }
 }
