@@ -30,23 +30,32 @@ Plugins
 
 ### Worker 
 
-(`M-M` Worker group)
+(*Belongs to many* Worker group)
 - ID
 - Name
 - RFID
 
 ### Worker group 
 
-(`M-M` Worker)
-(`M-M` Lock)
+(*Has many* Worker)
+(*Has many* Lock)
 - ID
 - Name
 
 ### Lock
 
-(`M-M` Worker group)
+(*Belongs to many*  Worker group)
 - ID
 - Name
+
+### Log
+- ID
+- Person
+- Subject
+- Description
+- Timestamp
+
+*(Note: Log records are )*
 
 ### Device
 
@@ -62,6 +71,7 @@ Plugins
 - Worker group
 - Lock
 - Device
+- Log
 
 ### Plugin Controllers:
 - POST: AuthenticateWorker
