@@ -24,18 +24,18 @@ Route::post('/workerauth','AuthenticateWorkerController@auth')->name("workerauth
 
 Route::get('/thermo/{device_id}/{user_id}','ThermometerDataController@show')->name("thermo_show");
 
-Route::get('/Fan/{device_id}/{user_id}','FandataController@show')->name("Fan_show");
+Route::get('/Fan/{device_id}/{user_id}','FandataController@show')->name("fan_show");
 
-Route::put('/Fanauth','FandataController@show');
-
-
-Route::get('/Heat/{device_id}/{user_id}','HeatingDataController@show')->name("Heat_show");
+Route::put('/Fan/{device_id}/{user_id}','FandataController@update')->name("fan_update");
 
 
-Route::put('/Heat','HeatingdataController@show')->name("Heat_show");
+Route::get('/Heat/{device_id}/{user_id}','HeatingDataController@show')->name("heat_show");
 
 
-Route::get('/Camera/{device_id}/{user_id}','CameraController@show')->name("Camera_show");
+Route::put('/Heat/{device_id}/{user_id}','HeatingdataController@update')->name("heat_update");
+
+
+Route::get('/Camera/{device_id}/{user_id}','CameraController@show')->name("camera_show");
 
 
 Route::resource('worker','WorkerController');
