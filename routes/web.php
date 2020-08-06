@@ -17,6 +17,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get($uri , $calllback);
+
+
+Route::get('foo', function () {
+    return 'Hello World';
+});
+
+Route::post("Authenticate Worker",function(){
+   return 
+});
+

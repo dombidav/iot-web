@@ -16,4 +16,42 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+
 });
+
+Route::post('/workerauth','AuthenticateWorkerController@auth')->name("workerauth");
+
+
+Route::get('/thermo/{device_id}/{user_id}','ThermometerDataController@show')->name("thermo_show");
+
+Route::get('/Fan/{device_id}/{user_id}','FandataController@show')->name("Fan_show");
+
+Route::put('/Fanauth','FandataController@show')->name("Fan_show");
+
+
+
+Route::get('/Heat/{device_id}/{user_id}','HeatingdataController@show')->name("Heat_show");
+
+
+Route::put('/Heating','HeatingdataController@show')->name("Fan_show");
+
+
+Route::get('/Camerea/{device_id}/{user_id}','CameraController@show')->name("Camera_show");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
