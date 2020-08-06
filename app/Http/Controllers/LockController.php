@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Lock;
 use Illuminate\Http\Request;
+use App\Http\Resources;
+use App\Http\Resources\LockResource;
 
 class LockController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +17,8 @@ class LockController extends Controller
      */
     public function index()
     {
-        //
+        $lock=Lock::paginate(10);
+        return response(LockResource::collection($lock));
     }
 
     /**
@@ -24,7 +28,7 @@ class LockController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -35,7 +39,12 @@ class LockController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $lock = new Lock();
+        $lock->name = $request->input('name');
+
+        if($lock->save()){
+            return response(new LockResource($lock));
+        }
     }
 
     /**
@@ -44,9 +53,10 @@ class LockController extends Controller
      * @param  \App\Lock  $lock
      * @return \Illuminate\Http\Response
      */
-    public function show(Lock $lock)
+    public function show($id)
     {
-        //
+        $lock = Lock::findOrFail($id);
+        return response(new LockResource($lock));
     }
 
     /**
@@ -57,7 +67,7 @@ class LockController extends Controller
      */
     public function edit(Lock $lock)
     {
-        //
+
     }
 
     /**
@@ -67,9 +77,14 @@ class LockController extends Controller
      * @param  \App\Lock  $lock
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Lock $lock)
+    public function update(Request $request, $id)
     {
-        //
+        $lock=Lock::findOrFail($id);
+        $lock->name = $request->filled('name')? $request->input('name') : $lock->name;
+
+        if($lock->save()){
+            return response(new LockResource($lock));
+        }
     }
 
     /**
@@ -78,8 +93,11 @@ class LockController extends Controller
      * @param  \App\Lock  $lock
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Lock $lock)
+    public function destroy($id)
     {
-        //
+        $lock=Lock::findOrFail($id);
+        if($lock->delete()){
+            return response("Lock deleted.");
+        }
     }
 }
