@@ -14,9 +14,9 @@ class DatabaseSeeder extends Seeder
          $this->call(UserSeeder::class);
         $this->call(DeviceSeeder::class);
         $this->call(WorkerSeeder::class);
-        $this->call(WorkerGroupSeeder::class);
+        $this->call(GroupSeeder::class);
         $this->call(LogSeeder::class);
         $this->call(LockSeeder::class);
-        $this->call(WorkerGroupConnectionSeeder::class);
+        $this->call(GroupConnectionSeeder::class);
     }
 }

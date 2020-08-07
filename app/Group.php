@@ -5,7 +5,10 @@ namespace App;
 //use Illuminate\Database\Eloquent\Model;
 use Jenssegers\Mongodb\Eloquent\Model;
 
-class WorkerGroup extends Model
+/**
+ * @property string name
+ */
+class Group extends Model
 {
     public function workers(){
         return $this->belongsToMany('App\Worker');
