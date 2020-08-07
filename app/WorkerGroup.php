@@ -8,10 +8,10 @@ use Jenssegers\Mongodb\Eloquent\Model;
 class WorkerGroup extends Model
 {
     public function workers(){
-        return $this->hasMany('App\Worker');
+        return $this->belongsToMany('App\Worker');
     }
 
     public function locks(){
-        return $this->hasMany('App\Lock');
+        return $this->belongsToMany('App\Lock');
     }
 }
