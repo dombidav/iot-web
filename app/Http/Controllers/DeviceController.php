@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DeviceController extends Controller
 {
@@ -18,14 +19,14 @@ class DeviceController extends Controller
      * Display a listing of the resource.
      *
      * @param CategoryEnum|null $category
-     * @return AnonymousResourceCollection
+     * @return ResponseFactory|AnonymousResourceCollection|Response
      */
-    public function index(CategoryEnum $category = null)
+    public function index($category = null)
     {
-        if($category != null){
-            $devices=Device::where('category', '=', $category->value)->paginate(10);
+        if($category){
+            $devices=Device::where('category', '=', $category)->paginate(50);
         }else{
-            $devices=Device::paginate(10);
+            $devices=Device::paginate(50);
         }
         return DeviceResource::collection($devices);
     }
@@ -37,7 +38,6 @@ class DeviceController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -50,6 +50,7 @@ class DeviceController extends Controller
     {
         $device = new Device();
         $device->name = $request->input('name');
+        $device->category = $request->input('category');
 
         if($device->save()){
             return new DeviceResource($device);
@@ -61,11 +62,11 @@ class DeviceController extends Controller
      * Display the specified resource.
      *
      * @param Device $device
-     * @return Response
+     * @return DeviceResource
      */
     public function show(Device $device)
     {
-        return response(new DeviceResource($device));
+        return new DeviceResource($device);
     }
 
     /**
@@ -89,11 +90,11 @@ class DeviceController extends Controller
     public function update(Request $request, Device $device)
     {
         $device->name = $request->filled('name')? $request->input('name') : $device->name;
+        $device->category = $request->filled('category')? $request->input('category') : $device->category;
 
         if($device->save()){
             return new DeviceResource($device);
         }
-
         return response('Failed to Update', 500);
     }
 
