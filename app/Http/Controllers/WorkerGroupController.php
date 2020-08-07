@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Lock;
+use App\Worker;
 use App\WorkerGroup;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -89,12 +91,33 @@ class WorkerGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\WorkerGroup  $workerGroup
+     * @param \App\WorkerGroup $workerGroup
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(WorkerGroup $workerGroup)
     {
         if($workerGroup->delete()) {
+            return new WorkerGroupResource($workerGroup);
+        }
+    }
+
+    public function addWorker(Request $request){
+        $worker = Worker::findOrFail($request->input('worker_id'));
+        $workerGroup = WorkerGroup::findOrFail($request->input('workergroup_id'));
+        $worker->groups()->attach($workerGroup);
+
+        if($workerGroup->save()){
+            return new WorkerGroupResource($workerGroup);
+        }
+    }
+
+    public function addLock(Request $request){
+        $lock = Lock::findOrFail($request->input('lock_id'));
+        $workerGroup = WorkerGroup::findOrFail($request->input('workergroup_id'));
+        $lock->groups()->attach($workerGroup);
+
+        if($workerGroup->save()){
             return new WorkerGroupResource($workerGroup);
         }
     }
