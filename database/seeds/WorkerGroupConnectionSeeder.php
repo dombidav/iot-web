@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class WorkerGroupconnectionSeeder extends Seeder
+class WorkerGroupConnectionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
