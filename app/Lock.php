@@ -7,5 +7,7 @@ use Jenssegers\Mongodb\Eloquent\Model;
 
 class Lock extends Model
 {
-    //protected $connection = "mongoDB";
+    public function groups(){
+        return $this->belongsToMany('App\WorkerGroup');
+    }
 }
