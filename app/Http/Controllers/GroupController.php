@@ -20,8 +20,8 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $workerGroup = Group::paginate(20);
-        return GroupResource::collection($workerGroup);
+        $group = Group::paginate(20);
+        return GroupResource::collection($group);
     }
 
     /**
@@ -42,12 +42,12 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        $worker = new Group;
+        $group = new Group;
 
-        $worker->name = $request->input('name');
+        $group->name = $request->input('name');
 
-        if($worker->save()) {
-            return new GroupResource($worker);
+        if($group->save()) {
+            return new GroupResource($group);
         }
     }
 
