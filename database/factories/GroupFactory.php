@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\WorkerGroup;
+use App\Group;
 use Faker\Generator as Faker;
 
-$factory->define(WorkerGroup::class, function (Faker $faker) {
+$factory->define(Group::class, function (Faker $faker) {
     return [
         'name'=>$faker->text(20)
     ];

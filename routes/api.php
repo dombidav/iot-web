@@ -21,11 +21,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/workerauth','AuthenticateWorkerController@auth')->name("workerauth");
 
-Route::post('authorize/worker','WorkerGroupController@addWorker');
-Route::post('authorize/lock','WorkerGroupController@addLock');
+Route::post('authorize/worker','GroupController@addWorker');
+Route::post('authorize/lock','GroupController@addLock');
 
 Route::resource('worker','WorkerController');
-Route::resource('workergroup','WorkerGroupController');
+Route::resource('workergroup','GroupController');
 
 Route::resource('device', 'DeviceController')->except(['index']);
 Route::get('/devices/{category?}', 'DeviceController@index')->name('device.index');

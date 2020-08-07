@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class WorkerGroupConnectionSeeder extends Seeder
+class GroupConnectionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +11,7 @@ class WorkerGroupConnectionSeeder extends Seeder
      */
     public function run()
     {
-        foreach (\App\WorkerGroup::all() as $group){
+        foreach (\App\Group::all() as $group){
             for ($i=0; $i<rand(0,50);$i++){
                 \App\Worker::all()->random()->groups()->attach($group);
                 \App\Lock::all()->random()->groups()->attach($group);

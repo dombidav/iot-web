@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Lock;
 use App\Worker;
-use App\WorkerGroup;
+use App\Group;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Resources\WorkerGroupResource;
+use App\Http\Resources\GroupResource;
 
-class WorkerGroupController extends Controller
+class GroupController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +18,8 @@ class WorkerGroupController extends Controller
      */
     public function index()
     {
-        $workerGroup = WorkerGroup::paginate(20);
-        return WorkerGroupResource::collection($workerGroup);
+        $workerGroup = Group::paginate(20);
+        return GroupResource::collection($workerGroup);
     }
 
     /**
@@ -40,34 +40,34 @@ class WorkerGroupController extends Controller
      */
     public function store(Request $request)
     {
-        $workerGroup = new WorkerGroup;
+        $workerGroup = new Group;
 
         $workerGroup->name = $request->input('name');
 
         if($workerGroup->save()) {
-            return new WorkerGroupResource($worker);
+            return new GroupResource($worker);
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\WorkerGroup  $workerGroup
+     * @param  \App\Group  $workerGroup
      * @return \Illuminate\Http\Response
      */
-    public function show(WorkerGroup $workerGroup)
+    public function show(Group $workerGroup)
     {
-        $workerGroupObject = WorkerGroup::findOrFail($workerGroup);
-        return new WorkerGroupResource($workerGroupObject);
+        $workerGroupObject = Group::findOrFail($workerGroup);
+        return new GroupResource($workerGroupObject);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\WorkerGroup  $workerGroup
+     * @param  \App\Group  $workerGroup
      * @return \Illuminate\Http\Response
      */
-    public function edit(WorkerGroup $workerGroup)
+    public function edit(Group $workerGroup)
     {
         //
     }
@@ -76,49 +76,49 @@ class WorkerGroupController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\WorkerGroup  $workerGroup
+     * @param  \App\Group  $workerGroup
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, WorkerGroup $workerGroup)
+    public function update(Request $request, Group $workerGroup)
     {
         $workerGroup->name = $request->input('name');
 
         if($workerGroup->save()) {
-            return new WorkerGroupResource($workerGroup);
+            return new GroupResource($workerGroup);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\WorkerGroup $workerGroup
+     * @param \App\Group $workerGroup
      * @return \Illuminate\Http\Response
      * @throws \Exception
      */
-    public function destroy(WorkerGroup $workerGroup)
+    public function destroy(Group $workerGroup)
     {
         if($workerGroup->delete()) {
-            return new WorkerGroupResource($workerGroup);
+            return new GroupResource($workerGroup);
         }
     }
 
     public function addWorker(Request $request){
         $worker = Worker::findOrFail($request->input('worker_id'));
-        $workerGroup = WorkerGroup::findOrFail($request->input('workergroup_id'));
+        $workerGroup = Group::findOrFail($request->input('workergroup_id'));
         $worker->groups()->attach($workerGroup);
 
         if($workerGroup->save()){
-            return new WorkerGroupResource($workerGroup);
+            return new GroupResource($workerGroup);
         }
     }
 
     public function addLock(Request $request){
         $lock = Lock::findOrFail($request->input('lock_id'));
-        $workerGroup = WorkerGroup::findOrFail($request->input('workergroup_id'));
+        $workerGroup = Group::findOrFail($request->input('workergroup_id'));
         $lock->groups()->attach($workerGroup);
 
         if($workerGroup->save()){
-            return new WorkerGroupResource($workerGroup);
+            return new GroupResource($workerGroup);
         }
     }
 }

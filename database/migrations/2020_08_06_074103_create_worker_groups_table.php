@@ -13,7 +13,7 @@ class CreateWorkerGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('worker_groups', function (Blueprint $table) {
+        Schema::create('groups', function (Blueprint $table) {
             $table->text('name');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ class CreateWorkerGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('worker_groups');
+        Schema::dropIfExists('groups');
     }
 }
