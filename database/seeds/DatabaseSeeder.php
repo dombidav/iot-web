@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkerGroupSeeder::class);
         $this->call(LogSeeder::class);
         $this->call(LockSeeder::class);
+        $this->call(WorkerGroupconnectionSeeder::class);
     }
 }
