@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 });
 
-Route::post('/workerauth','AuthenticateWorkerController@auth')->name("workerauth");
+Route::post('/workerauth','WorkerAccsessControler@auth')->name('workerauth');
 
 Route::post('authorize/worker','WorkerGroupController@addWorker');
 Route::post('authorize/lock','WorkerGroupController@addLock');
