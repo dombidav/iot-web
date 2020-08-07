@@ -25,4 +25,18 @@ class CategoryEnum extends Enum
             'fan' => 5,
         ];
     }
+
+    /**
+     * Create an enum from value, return null on unknown category
+     * @param $categoryNumber
+     * @return CategoryEnum|null
+     */
+    public static function fromValue($categoryNumber){
+        foreach (self::values() as $key=> $value){
+            if($value == $categoryNumber){
+                return new CategoryEnum($key);
+            }
+        }
+        return null;
+    }
 }
