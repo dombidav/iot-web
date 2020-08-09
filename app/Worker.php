@@ -13,6 +13,10 @@ use Jenssegers\Mongodb\Eloquent\Model;
 class Worker extends Model
 {
     public function groups(){
-        return $this->belongsToMany('App\WorkerGroup');
+        return $this->belongsToMany('App\Group');
+    }
+
+    public function logs(){
+        return $this->belongsToMany('App\Log');
     }
 }
