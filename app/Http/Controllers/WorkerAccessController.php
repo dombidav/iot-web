@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AccessControlSystem;
 use App\Lock;
 use App\Worker;
 use Illuminate\Http\Request;
@@ -9,21 +10,7 @@ use App\Helpers\ResponseWrapper;
 
 class WorkerAccessController extends Controller
 {
-    /**
-     * Checks if a worker can use a specific lock
-     * @param Worker $worker
-     * @param Lock $lock
-     * @return bool
-     */
-    public static function WorkerCanUseLock(Worker $worker, Lock $lock): bool
-    {
-        foreach ($worker->groups as $group) {
-            if ($lock->groups->contains($group)) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     public function access(Request $request)
     {
@@ -36,7 +23,23 @@ class WorkerAccessController extends Controller
         $lock = Lock::find($request->get('device_id'));
         if(!$lock) return ResponseWrapper::wrap('Lock not found', $request->all(), 404);
 
-        if(self::WorkerCanUseLock($worker, $lock)) return response(json_encode(["message" => "ok", "logged" => true]), 200);
-        return response(json_encode(["message" => "denied", "logged" => true]), 403);
+        if(AccessControlSystem::WorkerCanUseLock($worker, $lock)) return response(json_encode(["message" => "ok", "logged" => AccessControlSystem::Logging()]), 200);
+        return response(json_encode(["message" => "denied", "logged" => AccessControlSystem::Logging()]), 403);
+    }
+
+    public function getStatus(){
+        return response(json_encode(['status' => AccessControlSystem::Status()]));
+    }
+
+    public function setStatus(Request $request){
+        if($request->filled('new_status')) {
+            AccessControlSystem::Status($request->get('new_status'));
+            return response('', 204);
+        }
+
+    }
+
+    public function getLogging(){
+        return response(json_encode(['status' => AccessControlSystem::Logging()]));
     }
 }

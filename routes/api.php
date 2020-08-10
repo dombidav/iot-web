@@ -19,7 +19,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 });
 
-Route::post('/workerauth','WorkerAccessController@access')->name('workerauth');
+Route::post('/access-control','WorkerAccessController@access')->name('acs.auth');
+Route::get('/access-control/status', 'WorkerAccessController@getStatus')->name('acs.get_status');
+Route::put('/access-control/status', 'WorkerAccessController@setStatus')->name('acs.set_status');
+Route::get('/access-control/logging', 'WorkerAccessController@getLogging')->name('acs.get_logging');
+Route::put('/access-control/logging', 'WorkerAccessController@setLogging')->name('acs.set_logging');
 
 Route::post('authorize/worker','GroupController@addWorker');
 Route::post('authorize/lock','GroupController@addLock');
