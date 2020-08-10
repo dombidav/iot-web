@@ -54,7 +54,7 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Group  $workerGroup
+     * @param Group $workerGroup
      * @return Response
      */
     public function show(Group $workerGroup)
@@ -66,7 +66,7 @@ class GroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Group  $workerGroup
+     * @param Group $workerGroup
      * @return Response
      */
     public function edit(Group $workerGroup)
@@ -78,8 +78,8 @@ class GroupController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  \App\Group  $workerGroup
-     * @return Response
+     * @param Group $workerGroup
+     * @return GroupResource
      */
     public function update(Request $request, Group $workerGroup)
     {
@@ -93,7 +93,7 @@ class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Group $workerGroup
+     * @param Group $workerGroup
      * @return Response
      * @throws \Exception
      */
@@ -112,6 +112,7 @@ class GroupController extends Controller
         if($workerGroup->save()){
             return new GroupResource($workerGroup);
         }
+        return response("Save Failed", 500);
     }
 
     public function addLock(Request $request){
