@@ -44,7 +44,7 @@ class WorkerController extends Controller
         $worker = new Worker;
 
         $worker->name = $request->input('name');
-        $worker->rfid = $request->input('rfid'); //TODO
+        $worker->rfid = $request->input('rfid');
 
         if($worker->save()) {
             return new WorkerResource($worker);
@@ -82,8 +82,8 @@ class WorkerController extends Controller
      */
     public function update(Request $request, Worker $worker)
     {
-        $worker->name = $request->input('name');
-        $worker->rfid = $request->input('rfid'); //TODO
+        $worker->name = $request->filled('name') ? $request->input('name') : $worker->name;
+        $worker->rfid = $request->filled('rfid') ? $request->input('rfid') : $worker->rfid;
 
         if($worker->save()) {
             return new WorkerResource($worker);
