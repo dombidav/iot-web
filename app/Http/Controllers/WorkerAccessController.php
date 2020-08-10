@@ -36,6 +36,7 @@ class WorkerAccessController extends Controller
             AccessControlSystem::Status($request->get('new_status'));
             return response('', 204);
         }
+        return response(json_encode(['message' => 'New status was missing', 'status' => 400]), 400);
 
     }
 
