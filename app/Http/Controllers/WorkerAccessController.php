@@ -23,12 +23,14 @@ class WorkerAccessController extends Controller
         $lock = Lock::find($request->get('device_id'));
         if(!$lock) return ResponseWrapper::wrap('Lock not found', $request->all(), 404);
 
-        if(AccessControlSystem::WorkerCanUseLock($worker, $lock)) return response(json_encode(["message" => "ok", "logged" => AccessControlSystem::Logging()]), 200);
-        return response(json_encode(["message" => "denied", "logged" => AccessControlSystem::Logging()]), 403);
+        if(AccessControlSystem::WorkerCanUseLock($worker, $lock))
+            return response()->json(["message" => "ok", "logged" => AccessControlSystem::Logging()])->setStatusCode(200);
+
+        return response()->json(["message" => "denied", "logged" => AccessControlSystem::Logging()])->setStatusCode(403);
     }
 
     public function getStatus(){
-        return response(json_encode(['status' => AccessControlSystem::Status()]));
+        return response()->json(['data' => AccessControlSystem::Status()]);
     }
 
     public function setStatus(Request $request){
@@ -36,11 +38,19 @@ class WorkerAccessController extends Controller
             AccessControlSystem::Status($request->get('new_status'));
             return response('', 204);
         }
-        return response(json_encode(['message' => 'New status was missing', 'status' => 400]), 400);
+        return response()->json(['message' => 'New status was missing', 'status' => 400])->setStatusCode(400);
 
     }
 
     public function getLogging(){
-        return response(json_encode(['status' => AccessControlSystem::Logging()]));
+        return response()->json(['data' => AccessControlSystem::Logging()]);
+    }
+
+    public function setLogging(Request $request){
+        if($request->filled('new_logging')) {
+            AccessControlSystem::Logging($request->get('new_logging'));
+            return response('', 204);
+        }
+        return response()->json(['message' => 'New logging was missing', 'status' => 400])->setStatusCode(400);
     }
 }
