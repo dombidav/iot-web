@@ -27,6 +27,8 @@ Route::put('/access-control/logging', 'WorkerAccessController@setLogging')->name
 
 Route::post('authorize/worker','GroupController@addWorker');
 Route::post('authorize/lock','GroupController@addLock');
+Route::delete('authorize/worker','GroupController@deleteWorker');
+Route::delete('authorize/lock','GroupController@deleteLock');
 
 Route::resource('worker','WorkerController');
 Route::resource('group','GroupController');

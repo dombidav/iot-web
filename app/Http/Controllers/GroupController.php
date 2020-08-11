@@ -126,4 +126,28 @@ class GroupController extends Controller
             return new GroupResource($workerGroup);
         }
     }
+
+    public function deleteWorker(Request $request){
+        $worker = $request->input('worker_id');
+        $group = Group::findOrFail($request->input('workergroup_id'));
+        $group->workers()->detach($worker);
+
+        if($group->save()){
+            return new GroupResource($group);
+        }
+         return response('Failed to Delete', 500);
+
+    }
+
+    public function deleteLock(Request $request){
+        $lock = $request->input('lock_id');
+        $group = Group::findOrFail($request->input('workergroup_id'));
+        $group->locks()->detach($lock);
+
+        if($group->save()){
+             return new GroupResource($group);
+        }
+        return response('Failed to Delete', 500);
+    }
+
 }
