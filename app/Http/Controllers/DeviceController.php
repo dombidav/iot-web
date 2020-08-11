@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Device;
-use App\Helpers\CategoryEnum;
+use App\Helpers;
 use App\Http\Resources\DeviceResource;
 use Exception;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -53,8 +53,11 @@ class DeviceController extends Controller
         $device->category = $request->input('category');
 
         if($device->save()){
+            Helpers\LogHelper::Log($request->input('user_id'), $device, Helpers\LogHelper::Device, "Store"); //TODO Example logging
             return new DeviceResource($device);
         }
+
+
         return response('Failed to Save', 500);
     }
 

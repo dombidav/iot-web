@@ -7,6 +7,7 @@ use App\Worker;
 use App\Group;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use App\Helpers;
 use App\Http\Resources\GroupResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -86,6 +87,7 @@ class GroupController extends Controller
         $workerGroup->name = $request->input('name');
 
         if($workerGroup->save()) {
+            Helpers\LogHelper::Log($request->input('user_id'), $workerGroup, Helpers\LogHelper::Group, "Update"); //TODO Example logging
             return new GroupResource($workerGroup);
         }
     }
