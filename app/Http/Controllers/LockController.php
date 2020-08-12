@@ -58,6 +58,7 @@ class LockController extends Controller
     public function show(Lock $lock)
 
     {  Helpers\LogHelper::Log($request->input('user_id'), $lock, Helpers\LogHelper::Lock, "Show"); 
+        
 
         return new LockResource($lock);
     }
@@ -101,7 +102,7 @@ class LockController extends Controller
     public function destroy(Lock $lock)
     {
         if($lock->delete()){
-            Helpers\LogHelper::Log($request->input('user_id'), $lock, Helpers\LogHelper::Lock, "Delete"); 
+            Helpers\LogHelper::Log($request->input('user_id'), $lock, Helpers\LogHelper::Lock, "Destroy"); 
             return "Lock deleted.";
         }
     }

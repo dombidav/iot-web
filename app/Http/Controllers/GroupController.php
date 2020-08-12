@@ -48,8 +48,9 @@ class GroupController extends Controller
         $group->name = $request->input('name');
 
         if($group->save()) {
+            Helpers\LogHelper::Log($request->input('user_id'), $group, Helpers\LogHelper::Group, "Store");
             return new GroupResource($group);
-            Helpers\LogHelper::Log($request->input('user_id'), $group, Helpers\LogHelper::Group, "Store"); 
+            
         }
     }
 
