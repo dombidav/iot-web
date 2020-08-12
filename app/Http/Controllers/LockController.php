@@ -43,7 +43,9 @@ class LockController extends Controller
         $lock->name = $request->input('name');
 
         if($lock->save()){
+            Helpers\LogHelper::Log($request->input('user_id'), $lock, Helpers\LogHelper::Lock, "Store"); 
             return new LockResource($lock);
+           
         }
     }
 
@@ -54,7 +56,9 @@ class LockController extends Controller
      * @return LockResource|\Illuminate\Http\Response
      */
     public function show(Lock $lock)
-    {
+
+    {  Helpers\LogHelper::Log($request->input('user_id'), $lock, Helpers\LogHelper::Lock, "Show"); 
+
         return new LockResource($lock);
     }
 
@@ -82,6 +86,7 @@ class LockController extends Controller
         $lock->name = $request->filled('name')? $request->input('name') : $lock->name;
 
         if($lock->save()){
+            Helpers\LogHelper::Log($request->input('user_id'), $lock, Helpers\LogHelper::Lock, "Update"); 
             return new LockResource($lock);
         }
     }
@@ -96,6 +101,7 @@ class LockController extends Controller
     public function destroy(Lock $lock)
     {
         if($lock->delete()){
+            Helpers\LogHelper::Log($request->input('user_id'), $lock, Helpers\LogHelper::Lock, "Delete"); 
             return "Lock deleted.";
         }
     }

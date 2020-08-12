@@ -49,6 +49,7 @@ class GroupController extends Controller
 
         if($group->save()) {
             return new GroupResource($group);
+            Helpers\LogHelper::Log($request->input('user_id'), $group, Helpers\LogHelper::Group, "Store"); 
         }
     }
 
@@ -102,6 +103,7 @@ class GroupController extends Controller
     public function destroy(Group $workerGroup)
     {
         if($workerGroup->delete()) {
+            Helpers\LogHelper::Log($request->input('user_id'), $workerGroup, Helpers\LogHelper::Group, "Destroy");
             return new GroupResource($workerGroup);
         }
     }
@@ -112,6 +114,7 @@ class GroupController extends Controller
         $worker->groups()->attach($workerGroup);
 
         if($workerGroup->save()){
+            
             return new GroupResource($workerGroup);
         }
         return response("Save Failed", 500);
