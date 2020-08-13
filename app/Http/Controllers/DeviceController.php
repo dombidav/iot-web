@@ -18,6 +18,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DeviceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('key.auth');
+    }
     /**
      * Display a listing of the resource.
      *

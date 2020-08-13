@@ -15,6 +15,10 @@ use Illuminate\Http\Response;
 
 class GroupController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('key.auth');
+    }
     /**
      * Display a listing of the resource.
      *

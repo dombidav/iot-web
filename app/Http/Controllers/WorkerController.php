@@ -13,6 +13,10 @@ use Illuminate\Http\Response;
 
 class WorkerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('key.auth');
+    }
     /**
      * Display a listing of the resource.
      *

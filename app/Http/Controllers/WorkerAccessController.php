@@ -11,7 +11,10 @@ use App\Helpers\ResponseWrapper;
 
 class WorkerAccessController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware('key.auth');
+    }
 
     public function access(Request $request)
     {

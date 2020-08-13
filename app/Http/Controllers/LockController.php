@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Date;
 
 class LockController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware('key.auth');
+    }
     /**
      * Display a listing of the resource.
      *
