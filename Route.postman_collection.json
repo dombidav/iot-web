@@ -12,7 +12,13 @@
 					"name": "http://iot-web.test/api/worker",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "http://iot-web.test/api/worker",
 							"protocol": "http",
@@ -32,9 +38,15 @@
 					"name": "http://iot-web.test/api/worker/5f2d1a127f1b0000880023be",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://iot-web.test/api/worker/5f2d1a127f1b0000880023be",
+							"raw": "http://iot-web.test/api/worker/5f351889f66a0000a90073f0",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -43,7 +55,7 @@
 							"path": [
 								"api",
 								"worker",
-								"5f2d1a127f1b0000880023be"
+								"5f351889f66a0000a90073f0"
 							]
 						}
 					},
@@ -57,6 +69,11 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
 								"type": "text"
 							}
 						],
@@ -88,6 +105,11 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -95,7 +117,7 @@
 							"raw": "{\r\n    \"name\" : \"Updated name\"\r\n}"
 						},
 						"url": {
-							"raw": "http://iot-web.test/api/worker/5f2d3f09a2550000fd006313",
+							"raw": "http://iot-web.test/api/worker/5f351889f66a0000a90073f0",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -104,7 +126,7 @@
 							"path": [
 								"api",
 								"worker",
-								"5f2d3f09a2550000fd006313"
+								"5f351889f66a0000a90073f0"
 							]
 						}
 					},
@@ -114,9 +136,15 @@
 					"name": "http://iot-web.test/api/worker/5f2d3f09a2550000fd006313",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://iot-web.test/api/worker/5f2d3f09a2550000fd006313",
+							"raw": "http://iot-web.test/api/worker/5f351889f66a0000a90073f3",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -125,7 +153,7 @@
 							"path": [
 								"api",
 								"worker",
-								"5f2d3f09a2550000fd006313"
+								"5f351889f66a0000a90073f3"
 							]
 						}
 					},
@@ -141,7 +169,13 @@
 					"name": "http://iot-web.test/api/lock",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "http://iot-web.test/api/lock",
 							"protocol": "http",
@@ -161,9 +195,15 @@
 					"name": "http://iot-web.test/api/lock/5f2d1a127f1b00008800247c",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://iot-web.test/api/lock/5f2d4c6e854500001a00615c",
+							"raw": "http://iot-web.test/api/lock/5f351889f66a0000a90074ae",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -172,7 +212,7 @@
 							"path": [
 								"api",
 								"lock",
-								"5f2d4c6e854500001a00615c"
+								"5f351889f66a0000a90074ae"
 							]
 						}
 					},
@@ -187,6 +227,11 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -194,7 +239,7 @@
 							"raw": "{\r\n    \"name\": \"Updated name\"\r\n}"
 						},
 						"url": {
-							"raw": "http://iot-web.test/api/lock/5f310f32301c0000270018d4",
+							"raw": "http://iot-web.test/api/lock/5f351889f66a0000a90074ae",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -203,7 +248,7 @@
 							"path": [
 								"api",
 								"lock",
-								"5f310f32301c0000270018d4"
+								"5f351889f66a0000a90074ae"
 							]
 						}
 					},
@@ -230,6 +275,11 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -255,9 +305,15 @@
 					"name": "http://iot-web.test/api/lock/5f2d4092a2550000fd006314",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://iot-web.test/api/lock/5f2d4092a2550000fd006314",
+							"raw": "http://iot-web.test/api/lock/5f351889f66a0000a90074af",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -266,7 +322,7 @@
 							"path": [
 								"api",
 								"lock",
-								"5f2d4092a2550000fd006314"
+								"5f351889f66a0000a90074af"
 							]
 						}
 					},
@@ -282,7 +338,13 @@
 					"name": "http://iot-web.test/api/group",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "http://iot-web.test/api/group",
 							"protocol": "http",
@@ -305,8 +367,13 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -335,8 +402,13 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -344,7 +416,7 @@
 							"raw": "{\r\n    \"name\" : \"Updated name\"\r\n}"
 						},
 						"url": {
-							"raw": "http://iot-web.test/api/group/5f313245b652000072000bc2",
+							"raw": "http://iot-web.test/api/group/5f352345312800002a0002de",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -353,7 +425,7 @@
 							"path": [
 								"api",
 								"group",
-								"5f313245b652000072000bc2"
+								"5f352345312800002a0002de"
 							]
 						}
 					},
@@ -363,9 +435,15 @@
 					"name": "http://iot-web.test/api/group/5f2d1a127f1b0000880023de",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://iot-web.test/api/group/5f31313d832e00009c002bfe",
+							"raw": "http://iot-web.test/api/group/5f351889f66a0000a900740e",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -374,7 +452,7 @@
 							"path": [
 								"api",
 								"group",
-								"5f31313d832e00009c002bfe"
+								"5f351889f66a0000a900740e"
 							]
 						}
 					},
@@ -387,8 +465,13 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -396,7 +479,7 @@
 							"raw": "{\r\n    \"description\": \"Updated description\"\r\n}"
 						},
 						"url": {
-							"raw": "http://iot-web.test/api/group/5f3132cfb652000072000bc3",
+							"raw": "http://iot-web.test/api/group/5f351889f66a0000a9007411",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -405,7 +488,7 @@
 							"path": [
 								"api",
 								"group",
-								"5f3132cfb652000072000bc3"
+								"5f351889f66a0000a9007411"
 							]
 						}
 					},
@@ -421,7 +504,13 @@
 					"name": "http://iot-web.test/api/devices/fan",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "http://iot-web.test/api/devices/fan",
 							"protocol": "http",
@@ -442,9 +531,15 @@
 					"name": "http://iot-web.test/api/device/5f2d4c6e854500001a006080",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://iot-web.test/api/device/5f2d4c6e854500001a006084",
+							"raw": "http://iot-web.test/api/device/5f351889f66a0000a90073db",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -453,7 +548,7 @@
 							"path": [
 								"api",
 								"device",
-								"5f2d4c6e854500001a006084"
+								"5f351889f66a0000a90073db"
 							]
 						}
 					},
@@ -467,6 +562,11 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
 								"type": "text"
 							}
 						],
@@ -498,6 +598,11 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -505,7 +610,7 @@
 							"raw": "{\r\n    \"name\" : \"An updated name\",\r\n    \"category\" : \"other\"\r\n}"
 						},
 						"url": {
-							"raw": "http://iot-web.test/api/device/5f3111b0301c0000270018d5",
+							"raw": "http://iot-web.test/api/device/5f351889f66a0000a90073db",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -514,7 +619,7 @@
 							"path": [
 								"api",
 								"device",
-								"5f3111b0301c0000270018d5"
+								"5f351889f66a0000a90073db"
 							]
 						}
 					},
@@ -524,9 +629,15 @@
 					"name": "http://iot-web.test/api/device/5f2d4c6e854500001a006080",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://iot-web.test/api/device/5f3111b0301c0000270018d5",
+							"raw": "http://iot-web.test/api/device/5f351889f66a0000a90073dd",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -535,7 +646,35 @@
 							"path": [
 								"api",
 								"device",
-								"5f3111b0301c0000270018d5"
+								"5f351889f66a0000a90073dd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://iot-web.test/api/device/5f351889f66a0000a90073d2/keep-alive",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://iot-web.test/api/device/5f351889f66a0000a90073d2/keep-alive",
+							"protocol": "http",
+							"host": [
+								"iot-web",
+								"test"
+							],
+							"path": [
+								"api",
+								"device",
+								"5f351889f66a0000a90073d2",
+								"keep-alive"
 							]
 						}
 					},
@@ -551,7 +690,13 @@
 					"name": "http://iot-web.test/api/log",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "http://iot-web.test/api/log",
 							"protocol": "http",
@@ -571,9 +716,15 @@
 					"name": "http://iot-web.test/api/log/5f2d1a127f1b0000880023fa",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://iot-web.test/api/log/5f2d4c6e854500001a0060da",
+							"raw": "http://iot-web.test/api/log/5f351889f66a0000a900742c",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -582,7 +733,7 @@
 							"path": [
 								"api",
 								"log",
-								"5f2d4c6e854500001a0060da"
+								"5f351889f66a0000a900742c"
 							]
 						}
 					},
@@ -596,6 +747,11 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
 								"type": "text"
 							}
 						],
@@ -627,6 +783,11 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -634,7 +795,7 @@
 							"raw": "{\r\n    \"person_id\": \"5f2d1a127f1b000000000000\",\r\n    \"subject_id\" : \"5f2d1a127f1b000000000000\",\r\n    \"description\" : \"This is an updated description\",\r\n    \"model\": \"1\"\r\n}"
 						},
 						"url": {
-							"raw": "http://iot-web.test/api/log/5f311325301c0000270018d6",
+							"raw": "http://iot-web.test/api/log/5f351889f66a0000a900742c",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -643,7 +804,7 @@
 							"path": [
 								"api",
 								"log",
-								"5f311325301c0000270018d6"
+								"5f351889f66a0000a900742c"
 							]
 						}
 					},
@@ -653,9 +814,15 @@
 					"name": "http://iot-web.test/api/log/5f2d1a127f1b0000880023fa",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://iot-web.test/api/log/5f311325301c0000270018d6",
+							"raw": "http://iot-web.test/api/log/5f352622312800002a0002e9",
 							"protocol": "http",
 							"host": [
 								"iot-web",
@@ -664,7 +831,7 @@
 							"path": [
 								"api",
 								"log",
-								"5f311325301c0000270018d6"
+								"5f352622312800002a0002e9"
 							]
 						}
 					},
@@ -680,21 +847,21 @@
 					"name": " http://iot-web.test/api/access-control",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "worker_rfid",
-									"value": "1641612840195793",
-									"type": "text"
-								},
-								{
-									"key": "device_id",
-									"value": "5f3116a7005100009f00243f",
-									"type": "text"
-								}
-							]
+							"mode": "raw",
+							"raw": "{\r\n    \"worker_rfid\" : \"0094181488930271\",\r\n    \"device_id\" : \"5f351889f66a0000a90074b0\"\r\n}"
 						},
 						"url": {
 							"raw": "http://iot-web.test/api/access-control",
@@ -720,11 +887,16 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"lock_id\" : \"5f3116a7005100009f002441\",\r\n    \"workergroup_id\" : \"5f31313d832e00009c002bfe\"\r\n}"
+							"raw": "{\r\n    \"lock_id\" : \"5f351889f66a0000a90074b0\",\r\n    \"workergroup_id\" : \"5f351889f66a0000a9007412\"\r\n}"
 						},
 						"url": {
 							"raw": "http://iot-web.test/api/authorize/lock",
@@ -751,11 +923,16 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"worker_id\" : \"5f311667f82c0000b000726f\",\r\n    \"workergroup_id\" : \"5f31313d832e00009c002bfe\"\r\n}"
+							"raw": "{\r\n    \"worker_id\" : \"5f351889f66a0000a90073f2\",\r\n    \"workergroup_id\" : \"5f351889f66a0000a9007413\"\r\n}"
 						},
 						"url": {
 							"raw": "http://iot-web.test/api/authorize/worker",
@@ -768,6 +945,78 @@
 								"api",
 								"authorize",
 								"worker"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://iot-web.test/api/authorize/worker",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"worker_id\": \"5f351889f66a0000a90073f2\",\r\n    \"workergroup_id\": \"5f351889f66a0000a9007412\"\r\n}"
+						},
+						"url": {
+							"raw": "http://iot-web.test/api/authorize/worker",
+							"protocol": "http",
+							"host": [
+								"iot-web",
+								"test"
+							],
+							"path": [
+								"api",
+								"authorize",
+								"worker"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://iot-web.test/api/authorize/lock",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "{{api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"lock_id\": \"5f351889f66a0000a90074c0\",\r\n    \"workergroup_id\": \"5f351889f66a0000a9007413\"\r\n}"
+						},
+						"url": {
+							"raw": "http://iot-web.test/api/authorize/lock",
+							"protocol": "http",
+							"host": [
+								"iot-web",
+								"test"
+							],
+							"path": [
+								"api",
+								"authorize",
+								"lock"
 							]
 						}
 					},
