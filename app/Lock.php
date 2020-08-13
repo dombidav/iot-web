@@ -9,8 +9,9 @@ use Jenssegers\Mongodb\Eloquent\Model;
 /**
  * @property string name
  * @property Collection groups
+ * @property mixed status
  * @method static Lock findOrFail($get)
- * @method static find($get)
+ * @method static Lock find($get)
  */
 class Lock extends Model
 {
