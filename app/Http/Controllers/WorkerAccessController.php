@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\AccessControlSystem;
+use App\Helpers\LogHelper;
 use App\Lock;
 use App\Worker;
 use Illuminate\Http\Request;
@@ -23,9 +24,12 @@ class WorkerAccessController extends Controller
         $lock = Lock::find($request->get('device_id'));
         if(!$lock) return ResponseWrapper::wrap('Lock not found', $request->all(), 404);
 
-        if(AccessControlSystem::WorkerCanUseLock($worker, $lock))
+        if(AccessControlSystem::WorkerCanUseLock($worker, $lock)) {
+            LogHelper::Log($request->input('user_id'), $lock, LogHelper::Access, ['Operation' => 'Access', 'Worker' => $worker, 'Lock' => $lock, 'WasAllowed' => true]);
             return response()->json(["message" => "ok", "logged" => AccessControlSystem::Logging()])->setStatusCode(200);
+        }
 
+        LogHelper::Log($request->input('user_id'), $lock, LogHelper::Access, ['Operation' => 'Access', 'Worker' => $worker, 'Lock' => $lock, 'WasAllowed' => false]);
         return response()->json(["message" => "denied", "logged" => AccessControlSystem::Logging()])->setStatusCode(403);
     }
 
