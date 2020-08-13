@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogHelper;
 use App\Lock;
 use App\Worker;
 use App\Group;
@@ -48,9 +49,9 @@ class GroupController extends Controller
         $group->name = $request->input('name');
 
         if($group->save()) {
-            Helpers\LogHelper::Log($request->input('user_id'), $group, Helpers\LogHelper::Group, "Store");
+            LogHelper::Log($request->input('user_id'), $group, LogHelper::Group, "Store");
             return new GroupResource($group);
-            
+
         }
     }
 
@@ -89,7 +90,7 @@ class GroupController extends Controller
         $workerGroup->name = $request->input('name');
 
         if($workerGroup->save()) {
-            Helpers\LogHelper::Log($request->input('user_id'), $workerGroup, Helpers\LogHelper::Group, "Update"); //TODO Example logging
+            LogHelper::Log($request->input('user_id'), $workerGroup, LogHelper::Group, "Update");
             return new GroupResource($workerGroup);
         }
     }
@@ -104,7 +105,7 @@ class GroupController extends Controller
     public function destroy(Group $workerGroup)
     {
         if($workerGroup->delete()) {
-            Helpers\LogHelper::Log($request->input('user_id'), $workerGroup, Helpers\LogHelper::Group, "Destroy");
+            LogHelper::Log(request()->input('user_id'), $workerGroup, LogHelper::Group, "Destroy");
             return new GroupResource($workerGroup);
         }
     }
@@ -115,7 +116,7 @@ class GroupController extends Controller
         $worker->groups()->attach($workerGroup);
 
         if($workerGroup->save()){
-            
+            LogHelper::Log($request->input('user_id'), $workerGroup, LogHelper::Group, "Added Worker");
             return new GroupResource($workerGroup);
         }
         return response("Save Failed", 500);
@@ -127,6 +128,7 @@ class GroupController extends Controller
         $lock->groups()->attach($workerGroup);
 
         if($workerGroup->save()){
+            LogHelper::Log($request->input('user_id'), $workerGroup, LogHelper::Group, "Added Lock");
             return new GroupResource($workerGroup);
         }
     }
@@ -137,6 +139,7 @@ class GroupController extends Controller
         $group->workers()->detach($worker);
 
         if($group->save()){
+            LogHelper::Log($request->input('user_id'), $group, LogHelper::Group, "Removed Worker");
             return new GroupResource($group);
         }
          return response('Failed to Delete', 500);
@@ -149,6 +152,7 @@ class GroupController extends Controller
         $group->locks()->detach($lock);
 
         if($group->save()){
+            LogHelper::Log($request->input('user_id'), $group, LogHelper::Group, "Removed Lock");
              return new GroupResource($group);
         }
         return response('Failed to Delete', 500);

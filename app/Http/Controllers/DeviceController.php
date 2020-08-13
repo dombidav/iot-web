@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Device;
 use App\Helpers;
+use App\Helpers\LogHelper;
 use App\Http\Resources\DeviceResource;
 use Exception;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -53,7 +54,7 @@ class DeviceController extends Controller
         $device->category = $request->input('category');
 
         if($device->save()){
-            Helpers\LogHelper::Log($request->input('user_id'), $device, Helpers\LogHelper::Device, "Store"); //TODO Example logging
+            LogHelper::Log($request->input('user_id'), $device, LogHelper::Device, "Store");
             return new DeviceResource($device);
         }
 
@@ -95,12 +96,12 @@ class DeviceController extends Controller
         $device->name = $request->filled('name')? $request->input('name') : $device->name;
         $device->category = $request->filled('category')? $request->input('category') : $device->category;
 
-        
+
 
         if($device->save()){
-            Helpers\LogHelper::Log($request->input('user_id'), $device, Helpers\LogHelper::Device, "Update");
+            LogHelper::Log($request->input('user_id'), $device, LogHelper::Device, "Update");
             return new DeviceResource($device);
-            
+
         }
         return response('Failed to Update', 500);
     }
@@ -115,7 +116,7 @@ class DeviceController extends Controller
     public function destroy(Device $device)
     {
         if($device->delete()){
-            Helpers\LogHelper::Log($request->input('user_id'), $device, Helpers\LogHelper::Device, "Destroy");
+            LogHelper::Log(request()->input('user_id'), $device, LogHelper::Device, "Destroy");
             return response("Device deleted.");
         }
         return response('Failed to Delete', 500);

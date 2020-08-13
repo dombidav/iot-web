@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Worker;
 use Exception;
+use App\Helpers\LogHelper;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Resources\WorkerResource;
@@ -47,8 +48,8 @@ class WorkerController extends Controller
         $worker->rfid = $request->input('rfid');
 
         if($worker->save()) {
-            Helpers\LogHelper::Log($request->input('user_id'), $worker, Helpers\LogHelper::Worker, "Store"); 
-            return new WorkerResource($worker);  
+            LogHelper::Log($request->input('user_id'), $worker, LogHelper::Worker, "Store");
+            return new WorkerResource($worker);
         }
     }
 
@@ -87,7 +88,7 @@ class WorkerController extends Controller
         $worker->rfid = $request->filled('rfid') ? $request->input('rfid') : $worker->rfid;
 
         if($worker->save()) {
-            Helpers\LogHelper::Log($request->input('user_id'), $worker, Helpers\LogHelper::Worker, "Update"); 
+            LogHelper::Log($request->input('user_id'), $worker, LogHelper::Worker, "Update");
             return new WorkerResource($worker);
         }
     }
@@ -102,9 +103,9 @@ class WorkerController extends Controller
     public function destroy(Worker $worker)
     {
         if($worker->delete()) {
-            Helpers\LogHelper::Log($request->input('user_id'), $worker, Helpers\LogHelper::Worker, "Destroy");
+            LogHelper::Log($request->input('user_id'), $worker, LogHelper::Worker, "Destroy");
             return new WorkerResource($worker);
-            
+
         }
     }
 }
