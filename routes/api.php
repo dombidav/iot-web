@@ -33,9 +33,11 @@ Route::delete('authorize/lock','GroupController@deleteLock');
 Route::resource('worker','WorkerController');
 Route::resource('group','GroupController');
 
+Route::put('/device/{device}/keep-alive', 'DeviceController@keepAlive')->name('device.keep_alive');
 Route::resource('device', 'DeviceController')->except(['index']);
 Route::get('/devices/{category?}', 'DeviceController@index')->name('device.index');
 
+Route::put('/lock/{lock}/keep-alive', 'LockController@keepAlive')->name('lock.keep_alive');
 Route::resource('lock','LockController');
 Route::resource('log', 'LogController');
 

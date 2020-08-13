@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Device;
 use App\Helpers;
 use App\Helpers\LogHelper;
+use App\Helpers\ResponseWrapper;
 use App\Http\Resources\DeviceResource;
 use Exception;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Date;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DeviceController extends Controller
@@ -60,6 +62,14 @@ class DeviceController extends Controller
 
 
         return response('Failed to Save', 500);
+    }
+
+    public function keepAlive(Request $request, Device $device){
+        if($device->exists){
+            $device->setUpdatedAt(Date::now())->save();
+            return new DeviceResource($device);
+        }
+        return ResponseWrapper::wrap('Device not found', $request->all(), 404);
     }
 
     /**

@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Device;
+use App\Helpers\ResponseWrapper;
+use App\Http\Resources\DeviceResource;
 use App\Lock;
 use Illuminate\Http\Request;
 use App\Helpers\LogHelper;
 use App\Http\Resources\LockResource;
+use Illuminate\Support\Facades\Date;
 
 class LockController extends Controller
 {
@@ -104,5 +108,13 @@ class LockController extends Controller
             LogHelper::Log($request->input('user_id'), $lock, LogHelper::Lock, "Destroy");
             return "Lock deleted.";
         }
+    }
+
+    public function keepAlive(Request $request, Device $device){
+        if($device->exists){
+            $device->setUpdatedAt(Date::now())->save();
+            return new DeviceResource($device);
+        }
+        return ResponseWrapper::wrap('Device not found', $request->all(), 404);
     }
 }
