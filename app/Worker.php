@@ -17,6 +17,8 @@ use Jenssegers\Mongodb\Query\Builder;
  */
 class Worker extends Model
 {
+    protected $guarded = [];
+    
     /**
      * Shorthand for Worker::firstWhere('RFID', $worker_rfid);
      * @param $worker_rfid

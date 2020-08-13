@@ -7,6 +7,8 @@ use Jenssegers\Mongodb\Eloquent\Model;
 
 class Log extends Model
 {
+    protected $guarded = [];
+
     public function user(){
         return $this->hasOne('App\User');
     }

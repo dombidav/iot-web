@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factory;
 $factory->define(Device::class, function (Faker $faker) {
     return [
         'name'=>$faker->text(20),
-        'category'=>(['other', 'thermometer', 'heater', 'lock', 'fan'])[rand(0, 4)]
+        'category'=>(['other', 'thermometer', 'heater', 'lock', 'fan'])[rand(0, 4)],
+        'timeout' => $faker->numberBetween(0, 30)
     ];
 });

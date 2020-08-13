@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\AccessControlSystem;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,8 @@ class CreateLocksTable extends Migration
     {
         Schema::create('locks', function (Blueprint $table) {
             $table->text('name');
-            $table->string('status');
+            $table->string('status')->default(AccessControlSystem::Operational);
+            $table->integer('timeout')->default(30);
             $table->timestamps();
         });
     }

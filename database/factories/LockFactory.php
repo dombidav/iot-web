@@ -9,6 +9,7 @@ use Faker\Generator as Faker;
 $factory->define(Lock::class, function (Faker $faker) {
     return [
         'name'=>$faker->text(20),
-        'status' => AccessControlSystem::Operational
+        'status' => AccessControlSystem::Operational,
+        'timeout' => $faker->numberBetween(0, 30)
     ];
 });

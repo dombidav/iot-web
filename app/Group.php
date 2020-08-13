@@ -10,6 +10,8 @@ use Jenssegers\Mongodb\Eloquent\Model;
  */
 class Group extends Model
 {
+    protected $guarded = [];
+
     public function workers(){
         return $this->belongsToMany('App\Worker');
     }
