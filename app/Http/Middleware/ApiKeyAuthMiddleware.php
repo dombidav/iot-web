@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\ResponseWrapper;
 use Closure;
 use \App\Helpers\ApiKeyHelper;
 use \App\User;
@@ -17,7 +18,8 @@ class ApiKeyAuthMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if(ApiKeyHelper::isValid($key)){
+        $key = $request->header('api-key');
+        if(ApiKeyHelper::isValid($key ?? '')){
             if(User::where('api-key', $key)->count() > 0){
                 return $next($request);
             }
@@ -28,6 +30,6 @@ class ApiKeyAuthMiddleware
           else {
             return ResponseWrapper::wrap('Malformed API Key', $request->header(), 400);
           }
-        
+
     }
 }
