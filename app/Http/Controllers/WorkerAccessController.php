@@ -9,8 +9,15 @@ use App\Worker;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseWrapper;
 
+/**
+ * Class WorkerAccessController
+ * @package App\Http\Controllers
+ */
 class WorkerAccessController extends Controller
 {
+    /**
+     * WorkerAccessController constructor. Applies API-Key authentication middleware
+     */
     public function __construct()
     {
         $this->middleware('key.auth');
@@ -31,7 +38,6 @@ class WorkerAccessController extends Controller
             LogHelper::Log($request->input('user_id'), $lock, LogHelper::Access, ['Operation' => 'Access', 'Worker' => $worker, 'Lock' => $lock, 'WasAllowed' => true]);
             return response()->json(["message" => "ok", "logged" => AccessControlSystem::Logging()])->setStatusCode(200);
         }
-
         LogHelper::Log($request->input('user_id'), $lock, LogHelper::Access, ['Operation' => 'Access', 'Worker' => $worker, 'Lock' => $lock, 'WasAllowed' => false]);
         return response()->json(["message" => "denied", "logged" => AccessControlSystem::Logging()])->setStatusCode(403);
     }
@@ -46,7 +52,6 @@ class WorkerAccessController extends Controller
             return response('', 204);
         }
         return response()->json(['message' => 'New status was missing', 'status' => 400])->setStatusCode(400);
-
     }
 
     public function getLogging(){

@@ -9,8 +9,25 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
+/**
+ * Class ResponseWrapper: Wrapper function for JSON Responses
+ * @package App\Helpers
+ */
 class ResponseWrapper
 {
+    public const OK = 200;
+    public const CREATED = 201;
+    public const ACCEPTED = 202;
+
+    public const BAD_REQUEST = 400;
+    public const UNAUTHORIZED = 401;
+    public const ACCESS_DENIED = 403;
+    public const NOT_FOUND = 404;
+    public const METHOD_NOT_ALLOWED = 405;
+    public const CONFLICT = 409;
+
+    public const SERVER_ERROR = 500;
+    public const SERVICE_UNAVAILABLE = 503;
     /**
      * Generates a JSON response for throwback
      * @param string $message

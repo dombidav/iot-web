@@ -11,6 +11,8 @@ use Jenssegers\Mongodb\Query\Builder;
  * @method static LengthAwarePaginator paginate(int $int)
  * @method static Builder where(string $string, $worker_rfid)
  * @method static Worker firstWhere(string $string, $worker_rfid)
+ * @method static Worker findOrFail($input)
+ * @method static Worker find($input)
  * @property string name
  * @property string rfid
  * @property Group[] groups
@@ -18,7 +20,7 @@ use Jenssegers\Mongodb\Query\Builder;
 class Worker extends Model
 {
     protected $guarded = [];
-    
+
     /**
      * Shorthand for Worker::firstWhere('RFID', $worker_rfid);
      * @param $worker_rfid

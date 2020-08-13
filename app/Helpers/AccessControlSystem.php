@@ -7,6 +7,10 @@ namespace App\Helpers;
 use App\Lock;
 use App\Worker;
 
+/**
+ * Class AccessControlSystem: Helper function for ACS
+ * @package App\Helpers
+ */
 abstract class AccessControlSystem
 {
     public const Closed = 'Closed';
@@ -18,6 +22,7 @@ abstract class AccessControlSystem
     private static $logged = true;
 
     /**
+     * Get status if param is null, set status otherwise
      * @param string|null $status
      * @return int
      */
@@ -28,6 +33,7 @@ abstract class AccessControlSystem
     }
 
     /**
+     * Get logging if param is null, set status otherwise
      * @param bool|null $status
      * @return bool
      */

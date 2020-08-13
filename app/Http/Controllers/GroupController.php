@@ -3,18 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\LogHelper;
+use App\Helpers\ResponseWrapper;
 use App\Lock;
 use App\Worker;
 use App\Group;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Requests;
-use App\Helpers;
 use App\Http\Resources\GroupResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
+/**
+ * Class GroupController
+ * @package App\Http\Controllers
+ */
 class GroupController extends Controller
 {
+    /**
+     * GroupController constructor. Applies API-Key authentication middleware
+     */
     public function __construct()
     {
         $this->middleware('key.auth');
@@ -44,30 +52,35 @@ class GroupController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return GroupResource|Response
+     * @return GroupResource|JsonResponse|Response
      */
     public function store(Request $request)
     {
         $group = new Group;
 
         $group->name = $request->input('name');
+        if(!$request->filled('name'))
+            return ResponseWrapper::wrap('Name field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
 
         if($group->save()) {
-            LogHelper::Log($request->input('user_id'), $group, LogHelper::Group, "Store");
+            LogHelper::Log($request->header('api-key'), $group, LogHelper::Group, "Store");
             return new GroupResource($group);
-
         }
+        return ResponseWrapper::wrap('Group not saved', $request->all(), ResponseWrapper::SERVER_ERROR);
     }
 
     /**
      * Display the specified resource.
      *
      * @param Group $workerGroup
-     * @return Response
+     * @return GroupResource|JsonResponse
      */
-    public function show(Group $workerGroup)
+    public function show($workerGroup)
     {
-        $workerGroupObject = Group::findOrFail($workerGroup);
+        $workerGroupObject = Group::find($workerGroup);
+        if(!$workerGroupObject || !$workerGroupObject->exists){
+            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
+        }
         return new GroupResource($workerGroupObject);
     }
 
@@ -86,80 +99,129 @@ class GroupController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param Group $workerGroup
-     * @return GroupResource
+     * @param Group $group
+     * @return GroupResource|JsonResponse
      */
-    public function update(Request $request, Group $workerGroup)
+    public function update(Request $request, Group $group)
     {
-        $workerGroup->name = $request->input('name');
+        if(!$group->exists)
+            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
+        $group->name = $request->input('name');
 
-        if($workerGroup->save()) {
-            LogHelper::Log($request->input('user_id'), $workerGroup, LogHelper::Group, "Update");
-            return new GroupResource($workerGroup);
+        if($group->save()) {
+            LogHelper::Log($request->header('api-key'), $group, LogHelper::Group, "Update");
+            return new GroupResource($group);
         }
+        return ResponseWrapper::wrap('Device not updated', $request->all(), ResponseWrapper::SERVER_ERROR);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Group $workerGroup
-     * @return Response
-     * @throws \Exception
+     * @return GroupResource|JsonResponse|Response
+     * @throws Exception
      */
-    public function destroy(Group $workerGroup)
+    public function destroy($workerGroup)
     {
+        $workerGroup = Group::find($workerGroup);
+        if(!$workerGroup->exists)
+            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
         if($workerGroup->delete()) {
-            LogHelper::Log(request()->input('user_id'), $workerGroup, LogHelper::Group, "Destroy");
+            LogHelper::Log(request()->header('api-key'), $workerGroup, LogHelper::Group, "Destroy");
             return new GroupResource($workerGroup);
         }
+        return ResponseWrapper::wrap('Group not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);
     }
 
     public function addWorker(Request $request){
-        $worker = Worker::findOrFail($request->input('worker_id'));
-        $workerGroup = Group::findOrFail($request->input('workergroup_id'));
+        if(!$request->filled(('worker_id')))
+            return ResponseWrapper::wrap('Worker ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
+        if(!$request->filled(('group_id')))
+            return ResponseWrapper::wrap('Group ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
+        $worker = Worker::find($request->input('worker_id'));
+        if(!$worker || !$worker->exists)
+            return ResponseWrapper::wrap('Worker not found', request()->all(), ResponseWrapper::NOT_FOUND);
+        $workerGroup = Group::find($request->input('group_id'));
+        if(!$workerGroup->exists)
+            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
         $worker->groups()->attach($workerGroup);
 
         if($workerGroup->save()){
-            LogHelper::Log($request->input('user_id'), $workerGroup, LogHelper::Group, "Added Worker");
+            LogHelper::Log($request->header('api-key'), $workerGroup, LogHelper::Group, "Added Worker");
             return new GroupResource($workerGroup);
         }
-        return response("Save Failed", 500);
+        return ResponseWrapper::wrap('Worker not added to Group', request()->all(), ResponseWrapper::SERVER_ERROR);
     }
 
     public function addLock(Request $request){
-        $lock = Lock::findOrFail($request->input('lock_id'));
-        $workerGroup = Group::findOrFail($request->input('workergroup_id'));
-        $lock->groups()->attach($workerGroup);
+        if(!$request->filled('lock_id'))
+            return ResponseWrapper::wrap('Lock ID not found', request()->all(), ResponseWrapper::BAD_REQUEST) ;
+        if(!$request->filled(('group_id')))
+            return ResponseWrapper::wrap('Group ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
 
-        if($workerGroup->save()){
-            LogHelper::Log($request->input('user_id'), $workerGroup, LogHelper::Group, "Added Lock");
-            return new GroupResource($workerGroup);
+        $lock = Lock::find($request->input('lock_id'));
+        if(!$lock || !$lock->exists)
+            return ResponseWrapper::wrap('Lock not found', request()->all(), ResponseWrapper::NOT_FOUND);
+
+        $group = Group::find($request->input('group_id'));
+        if(!$group->exists)
+            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
+
+        $lock->groups()->attach($group);
+
+        if($group->save()){
+            LogHelper::Log($request->header('api-key'), $group, LogHelper::Group, "Added Lock");
+            return new GroupResource($group);
         }
+        return ResponseWrapper::wrap('Worker not added', request()->all(), ResponseWrapper::SERVER_ERROR);
     }
 
     public function deleteWorker(Request $request){
-        $worker = $request->input('worker_id');
-        $group = Group::findOrFail($request->input('workergroup_id'));
+        if(!$request->filled(('worker_id')))
+            return ResponseWrapper::wrap('Worker ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
+        if(!$request->filled(('group_id')))
+            return ResponseWrapper::wrap('Group ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
+
+        $worker = Worker::find($request->input('worker_id'));
+        if(!$worker || !$worker->exists)
+            return ResponseWrapper::wrap('Worker not found', request()->all(), ResponseWrapper::NOT_FOUND);
+
+        $group = Group::find($request->input('group_id'));
+        if(!$group->exists)
+            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
+
         $group->workers()->detach($worker);
 
         if($group->save()){
-            LogHelper::Log($request->input('user_id'), $group, LogHelper::Group, "Removed Worker");
+            LogHelper::Log($request->header('api-key'), $group, LogHelper::Group, "Removed Worker");
             return new GroupResource($group);
         }
-         return response('Failed to Delete', 500);
+        return ResponseWrapper::wrap('Worker not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);
 
     }
 
-    public function deleteLock(Request $request){
-        $lock = $request->input('lock_id');
-        $group = Group::findOrFail($request->input('workergroup_id'));
-        $group->locks()->detach($lock);
+    public function deleteLock(Request $request)
+    {
+        if (!$request->filled(('lock_id')))
+            return ResponseWrapper::wrap('Lock ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
+        if (!$request->filled(('group_id')))
+            return ResponseWrapper::wrap('Group ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
 
-        if($group->save()){
-            LogHelper::Log($request->input('user_id'), $group, LogHelper::Group, "Removed Lock");
-             return new GroupResource($group);
+        $lock = Lock::find($request->input('worker_id'));
+        if (!$lock || !$lock->exists)
+            return ResponseWrapper::wrap('Lock not found', request()->all(), ResponseWrapper::NOT_FOUND);
+
+        $group = Group::find($request->input('group_id'));
+        if (!$group->exists)
+            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
+
+        $group->workers()->detach($lock);
+
+        if ($group->save()) {
+            LogHelper::Log($request->header('api-key'), $group, LogHelper::Group, "Removed Worker");
+            return new GroupResource($group);
         }
-        return response('Failed to Delete', 500);
+        return ResponseWrapper::wrap('Lock not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);
     }
-
 }

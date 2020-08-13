@@ -14,6 +14,7 @@ use Jenssegers\Mongodb\Eloquent\Model;
  * @property mixed updated_at
  * @method static Lock findOrFail($get)
  * @method static Lock find($get)
+ * @method static paginate(int $int)
  */
 class Lock extends Model
 {
