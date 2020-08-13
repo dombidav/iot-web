@@ -65,7 +65,7 @@ class GroupController extends Controller
      * @param Group $workerGroup
      * @return Response
      */
-    public function show(Group $workerGroup)
+    public function show($workerGroup)
     {
         $workerGroupObject = Group::findOrFail($workerGroup);
         return new GroupResource($workerGroupObject);
@@ -106,8 +106,9 @@ class GroupController extends Controller
      * @return Response
      * @throws \Exception
      */
-    public function destroy(Group $workerGroup)
+    public function destroy($workerGroup)
     {
+        $workerGroup = Group::findOrFail($workerGroup);
         if($workerGroup->delete()) {
             LogHelper::Log(request()->input('user_id'), $workerGroup, LogHelper::Group, "Destroy");
             return new GroupResource($workerGroup);

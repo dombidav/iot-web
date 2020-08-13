@@ -89,7 +89,7 @@ class WorkerController extends Controller
     public function update(Request $request, Worker $worker)
     {
         $worker->name = $request->filled('name') ? $request->input('name') : $worker->name;
-        $worker->rfid = $request->filled('rfid') ? $request->input('rfid') : $worker->rfid;
+        $worker->RFID = $request->filled('rfid') ? $request->input('rfid') : $worker->RFID;
 
         if($worker->save()) {
             LogHelper::Log($request->input('user_id'), $worker, LogHelper::Worker, "Update");
@@ -107,7 +107,7 @@ class WorkerController extends Controller
     public function destroy(Worker $worker)
     {
         if($worker->delete()) {
-            LogHelper::Log($request->input('user_id'), $worker, LogHelper::Worker, "Destroy");
+            LogHelper::Log(request()->input('user_id'), $worker, LogHelper::Worker, "Destroy");
             return new WorkerResource($worker);
 
         }

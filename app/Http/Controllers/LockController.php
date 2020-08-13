@@ -108,7 +108,7 @@ class LockController extends Controller
     public function destroy(Lock $lock)
     {
         if($lock->delete()){
-            LogHelper::Log($request->input('user_id'), $lock, LogHelper::Lock, "Destroy");
+            LogHelper::Log(request()->input('user_id'), $lock, LogHelper::Lock, "Destroy");
             return "Lock deleted.";
         }
     }
