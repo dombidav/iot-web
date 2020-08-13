@@ -7,6 +7,9 @@ use Jenssegers\Mongodb\Eloquent\Model;
 
 /**
  * @property string name
+ * @method static paginate(int $int)
+ * @method static Group findOrFail(Group $workerGroup)
+ * @method static Group find(Group $workerGroup)
  */
 class Group extends Model
 {
