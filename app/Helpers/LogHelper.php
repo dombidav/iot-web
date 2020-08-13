@@ -22,12 +22,12 @@ class LogHelper
      * @param User|Worker $person
      * @param Model $subject
      * @param string $module
-     * @param string $description
+     * @param string | array $description
      */
-    public static function Log($person, Model $subject, string $module, string $description) : void {
+    public static function Log($person, Model $subject, string $module, $description) : void {
         $log = new Log([
-            'person_id' => $person->id,
-            'subject_id' => $subject->id,
+            'person_id' => $person ?? '',
+            'subject_id' => $subject instanceof Model ? $subject->id : ($subject ?? ''),
             'module' => $module,
             'description' => $description
         ]);
