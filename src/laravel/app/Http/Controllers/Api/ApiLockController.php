@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Device;
 use App\Helpers\ResponseWrapper;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\DeviceResource;
 use App\Lock;
 use Exception;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Date;
  * Class LockController
  * @package App\Http\Controllers
  */
-class LockController extends Controller
+class ApiLockController extends Controller
 {
     /**
      * LockController constructor. Applies API-Key authentication middleware

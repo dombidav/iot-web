@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Device;
 use App\Helpers;
 use App\Helpers\LogHelper;
 use App\Helpers\ResponseWrapper;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\DeviceResource;
 use Exception;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -21,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Class DeviceController
  * @package App\Http\Controllers
  */
-class DeviceController extends Controller
+class ApiDeviceController extends Controller
 {
     /**
      * DeviceController constructor. Applies API-Key authentication middleware

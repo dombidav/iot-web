@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Helpers\AccessControlSystem;
 use App\Helpers\LogHelper;
+use App\Http\Controllers\Controller;
 use App\Lock;
 use App\Worker;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ use App\Helpers\ResponseWrapper;
  * Class WorkerAccessController
  * @package App\Http\Controllers
  */
-class WorkerAccessController extends Controller
+class ApiWorkerAccessController extends Controller
 {
     /**
      * WorkerAccessController constructor. Applies API-Key authentication middleware

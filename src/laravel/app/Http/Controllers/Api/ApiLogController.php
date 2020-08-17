@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Helpers\ResponseWrapper;
+use App\Http\Controllers\Controller;
 use App\Log;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -16,7 +17,7 @@ use Illuminate\Http\Response;
  * Class LogController
  * @package App\Http\Controllers
  */
-class LogController extends Controller
+class ApiLogController extends Controller
 {
     /**
      * Display a listing of the resource.

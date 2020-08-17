@@ -19,27 +19,27 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 });
 
-Route::post('/access-control','WorkerAccessController@access')->name('acs.auth');
-Route::get('/access-control/status', 'WorkerAccessController@getStatus')->name('acs.get_status');
-Route::put('/access-control/status', 'WorkerAccessController@setStatus')->name('acs.set_status');
-Route::get('/access-control/logging', 'WorkerAccessController@getLogging')->name('acs.get_logging');
-Route::put('/access-control/logging', 'WorkerAccessController@setLogging')->name('acs.set_logging');
+Route::post('/access-control','Api\ApiWorkerAccessController@access')->name('acs.auth');
+Route::get('/access-control/status', 'Api\ApiWorkerAccessController@getStatus')->name('acs.get_status');
+Route::put('/access-control/status', 'Api\ApiWorkerAccessController@setStatus')->name('acs.set_status');
+Route::get('/access-control/logging', 'Api\ApiWorkerAccessController@getLogging')->name('acs.get_logging');
+Route::put('/access-control/logging', 'Api\ApiWorkerAccessController@setLogging')->name('acs.set_logging');
 
-Route::post('authorize/worker','GroupController@addWorker');
-Route::post('authorize/lock','GroupController@addLock');
-Route::delete('authorize/worker','GroupController@deleteWorker');
-Route::delete('authorize/lock','GroupController@deleteLock');
+Route::post('authorize/worker','Api\ApiGroupController@addWorker');
+Route::post('authorize/lock','Api\ApiGroupController@addLock');
+Route::delete('authorize/worker','Api\ApiGroupController@deleteWorker');
+Route::delete('authorize/lock','Api\ApiGroupController@deleteLock');
 
-Route::resource('worker','WorkerController');
-Route::resource('group','GroupController');
+Route::resource('worker','Api\ApiWorkerController');
+Route::resource('group','Api\ApiGroupController');
 
-Route::put('/device/{device}/keep-alive', 'DeviceController@keepAlive')->name('device.keep_alive');
-Route::resource('device', 'DeviceController')->except(['index']);
-Route::get('/devices/{category?}', 'DeviceController@index')->name('device.index');
+Route::put('/device/{device}/keep-alive', 'Api\ApiDeviceController@keepAlive')->name('device.keep_alive');
+Route::resource('device', 'Api\ApiDeviceController')->except(['index']);
+Route::get('/devices/{category?}', 'Api\ApiDeviceController@index')->name('device.index');
 
-Route::put('/lock/{lock}/keep-alive', 'LockController@keepAlive')->name('lock.keep_alive');
-Route::resource('lock','LockController');
-Route::resource('log', 'LogController');
+Route::put('/lock/{lock}/keep-alive', 'Api\ApiLockController@keepAlive')->name('lock.keep_alive');
+Route::resource('lock','Api\ApiLockController');
+Route::resource('log', 'Api\ApiLogController');
 
 
 

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Helpers\ResponseWrapper;
+use App\Http\Controllers\Controller;
 use App\Worker;
 use Exception;
 use App\Helpers\LogHelper;
@@ -17,7 +18,7 @@ use Illuminate\Http\Response;
  * Class WorkerController
  * @package App\Http\Controllers
  */
-class WorkerController extends Controller
+class ApiWorkerController extends Controller
 {
     /**
      * WorkerController constructor. Applies API-Key authentication middleware

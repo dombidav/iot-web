@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Helpers\LogHelper;
 use App\Helpers\ResponseWrapper;
+use App\Http\Controllers\Controller;
 use App\Lock;
 use App\Worker;
 use App\Group;
@@ -18,7 +19,7 @@ use Illuminate\Http\Response;
  * Class GroupController
  * @package App\Http\Controllers
  */
-class GroupController extends Controller
+class ApiGroupController extends Controller
 {
     /**
      * GroupController constructor. Applies API-Key authentication middleware
