@@ -38,7 +38,7 @@ class ApiAuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
         if ($token = $this->guard()->attempt($credentials)) {
-            return response()->json(['status' => 'success'], 200)->header('Authorization', $token);
+            return response()->json(['status' => 'success', 'user' => Auth::user()], 200)->header('Authorization', $token);
         }
         return response()->json(['error' => 'login_error'], 401);
     }
@@ -67,9 +67,8 @@ class ApiAuthController extends Controller
         }
         return response()->json(['error' => 'refresh_token_error'], 401);
     }
-
-    public function __construct()
+    private function guard()
     {
-        $this->middleware 
+        return Auth::guard();
     }
 }
