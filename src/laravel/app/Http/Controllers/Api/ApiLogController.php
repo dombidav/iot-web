@@ -26,8 +26,11 @@ class ApiLogController extends Controller
      */
     public function index()
     {
-        $log=Log::paginate(15);
-        return LogResource::collection($log);
+        $logs=Log::query();
+        foreach (request()->all() as $key=>$value){
+            $logs->orWhere($key,'like', '%'.$value.'%');
+        }
+        return LogResource::collection($logs->get());
     }
 
     /**

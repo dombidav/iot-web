@@ -36,8 +36,11 @@ class ApiLockController extends Controller
      */
     public function index()
     {
-        $lock=Lock::paginate(10);
-        return LockResource::collection($lock);
+        $locks = Lock::query();
+        foreach (request()->all() as $key=>$value){
+            $locks->orWhere($key, 'like', '%'.$value.'%');
+        }
+        return LockResource::collection($locks->get());
     }
 
     /**

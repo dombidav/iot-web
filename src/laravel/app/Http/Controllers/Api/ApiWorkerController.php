@@ -34,8 +34,11 @@ class ApiWorkerController extends Controller
      */
     public function index()
     {
-        $workers = Worker::paginate(20);
-        return WorkerResource::collection($workers);
+        $workers = Worker::query();
+        foreach (request()->all() as $key=>$value){
+            $workers->orWhere($key,'like', '%'.$value.'%');
+        }
+        return WorkerResource::collection($workers->get());
     }
 
     /**

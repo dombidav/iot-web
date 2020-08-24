@@ -35,9 +35,13 @@ class ApiGroupController extends Controller
      */
     public function index()
     {
-        $group = Group::paginate(20);
-        return GroupResource::collection($group);
+        $groups = Group::query();
+        foreach (request()->all() as $key => $value){
+            $groups->orWhere($key, 'like', '%' . $value . '%');
+        }
+        return GroupResource::collection($groups->get());
     }
+
 
     /**
      * Show the form for creating a new resource.

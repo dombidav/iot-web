@@ -43,7 +43,7 @@ class ApiDeviceController extends Controller
     public function index()
     {
         $devices = Device::query();
-        foreach (request()->all() as $key => $value){
+       foreach (request()->all() as $key => $value){
             $devices->orWhere($key, 'like', '%' . $value . '%');
         }
         return DeviceResource::collection($devices->get());
