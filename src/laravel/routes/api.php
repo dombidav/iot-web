@@ -19,28 +19,38 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 });
 
-Route::post('/access-control','Api\ApiWorkerAccessController@access')->name('acs.auth');
-Route::get('/access-control/status', 'Api\ApiWorkerAccessController@getStatus')->name('acs.get_status');
-Route::put('/access-control/status', 'Api\ApiWorkerAccessController@setStatus')->name('acs.set_status');
-Route::get('/access-control/logging', 'Api\ApiWorkerAccessController@getLogging')->name('acs.get_logging');
-Route::put('/access-control/logging', 'Api\ApiWorkerAccessController@setLogging')->name('acs.set_logging');
+Route::namespace('Api')->group(function (){
+    Route::post('/access-control','ApiWorkerAccessController@access')->name('acs.auth');
+    Route::get('/access-control/status', 'ApiWorkerAccessController@getStatus')->name('acs.get_status');
+    Route::put('/access-control/status', 'ApiWorkerAccessController@setStatus')->name('acs.set_status');
+    Route::get('/access-control/logging', 'ApiWorkerAccessController@getLogging')->name('acs.get_logging');
+    Route::put('/access-control/logging', 'ApiWorkerAccessController@setLogging')->name('acs.set_logging');
 
-Route::post('authorize/worker','Api\ApiGroupController@addWorker');
-Route::post('authorize/lock','Api\ApiGroupController@addLock');
-Route::delete('authorize/worker','Api\ApiGroupController@deleteWorker');
-Route::delete('authorize/lock','Api\ApiGroupController@deleteLock');
+    Route::post('authorize/worker','ApiGroupController@addWorker');
+    Route::post('authorize/lock','ApiGroupController@addLock');
+    Route::delete('authorize/worker','ApiGroupController@deleteWorker');
+    Route::delete('authorize/lock','ApiGroupController@deleteLock');
 
-Route::resource('worker','Api\ApiWorkerController');
-Route::resource('group','Api\ApiGroupController');
+    Route::resource('worker','ApiWorkerController');
+    Route::resource('group','ApiGroupController');
 
-Route::put('/device/{device}/keep-alive', 'Api\ApiDeviceController@keepAlive')->name('device.keep_alive');
-Route::resource('device', 'Api\ApiDeviceController');
+    Route::put('/device/{device}/keep-alive', 'ApiDeviceController@keepAlive')->name('device.keep_alive');
+    Route::resource('device', 'ApiDeviceController');
 
+    Route::put('/lock/{lock}/keep-alive', 'ApiLockController@keepAlive')->name('lock.keep_alive');
+    Route::resource('lock','ApiLockController');
+    Route::resource('log', 'ApiLogController');
 
-
-Route::put('/lock/{lock}/keep-alive', 'Api\ApiLockController@keepAlive')->name('lock.keep_alive');
-Route::resource('lock','Api\ApiLockController');
-Route::resource('log', 'Api\ApiLogController');
+    Route::prefix('auth')->group(function () {
+        Route::post('register', 'ApiAuthController@register');
+        Route::post('login', 'ApiAuthController@login');
+        Route::get('refresh', 'ApiAuthController@refresh');
+        Route::group(['middleware' => 'auth:api'], function(){
+            Route::get('user', 'ApiAuthController@user');
+            Route::post('logout', 'ApiAuthController@logout');
+        });
+    });
+});
 
 
 
