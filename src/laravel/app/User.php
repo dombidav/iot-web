@@ -10,6 +10,11 @@ use Jenssegers\Mongodb\Query\Builder;
 
 /**
  * @method static Builder where(string $string, array|string|null $key)
+ * @method static User find(int $id)
+ * @property string email
+ * @property string password
+ * @property int role
+ * @property string ApiKey
  */
 class User extends Authenticatable
 {
@@ -32,8 +37,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'api-key'
     ];
+
+    protected $appends = ['ApiKey'];
 
     /**
      * The attributes that should be cast to native types.
@@ -43,6 +50,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getApiKeyAttribute(){
+        return $this->attributes['api-key'];
+    }
 
     public function logs(){
         return $this->belongsToMany('App\Log');
