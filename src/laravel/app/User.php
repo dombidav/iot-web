@@ -69,22 +69,13 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
 
     public function getApiKeyAttribute(){
         return $this->attributes['api-key'];
     }
-<<<<<<< Updated upstream
-=======
 
     public function setApiKeyAttribute($value)
     {
         $this->attributes['api-key'] = $value;
     }
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 }
