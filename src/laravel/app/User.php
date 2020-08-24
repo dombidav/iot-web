@@ -37,10 +37,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'api-key'
+        'password', 'remember_token'
     ];
-
-    protected $appends = ['ApiKey'];
 
     /**
      * The attributes that should be cast to native types.
@@ -50,10 +48,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    public function getApiKeyAttribute(){
-        return $this->attributes['api-key'];
-    }
 
     public function logs(){
         return $this->belongsToMany('App\Log');
