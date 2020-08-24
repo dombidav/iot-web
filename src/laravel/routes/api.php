@@ -34,8 +34,9 @@ Route::resource('worker','Api\ApiWorkerController');
 Route::resource('group','Api\ApiGroupController');
 
 Route::put('/device/{device}/keep-alive', 'Api\ApiDeviceController@keepAlive')->name('device.keep_alive');
-Route::resource('device', 'Api\ApiDeviceController')->except(['index']);
-Route::get('/devices/{category?}', 'Api\ApiDeviceController@index')->name('device.index');
+Route::resource('device', 'Api\ApiDeviceController');
+
+
 
 Route::put('/lock/{lock}/keep-alive', 'Api\ApiLockController@keepAlive')->name('lock.keep_alive');
 Route::resource('lock','Api\ApiLockController');

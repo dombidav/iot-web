@@ -16,7 +16,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Str;
+use phpDocumentor\Reflection\Types\Array_;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class DeviceController
@@ -37,14 +40,13 @@ class ApiDeviceController extends Controller
      * @param string|null $category
      * @return ResponseFactory|AnonymousResourceCollection|Response
      */
-    public function index($category = null)
+    public function index()
     {
-        if($category){
-            $devices=Device::where('category', '=', $category)->paginate(50);
-        }else{
-            $devices=Device::paginate(50);
+        $devices = Device::query();
+        foreach (request()->all() as $key => $value){
+            $devices->orWhere($key, 'like', '%' . $value . '%');
         }
-        return DeviceResource::collection($devices);
+        return DeviceResource::collection($devices->get());
     }
 
     /**
