@@ -16,6 +16,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string password
  * @property int role
  * @property string ApiKey
+ * @property string remember_token
  */
 class User extends Authenticatable implements JWTSubject
 {

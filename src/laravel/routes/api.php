@@ -40,6 +40,7 @@ Route::namespace('Api')->group(function (){
     Route::put('/lock/{lock}/keep-alive', 'ApiLockController@keepAlive')->name('lock.keep_alive');
     Route::resource('lock','ApiLockController');
     Route::resource('log', 'ApiLogController');
+    Route::resource('user', 'ApiUserController');
 
     Route::prefix('auth')->group(function () {
         Route::post('register', 'ApiAuthController@register');
