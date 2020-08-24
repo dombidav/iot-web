@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Jenssegers\Mongodb\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Jenssegers\Mongodb\Query\Builder;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * @method static Builder where(string $string, array|string|null $key)
@@ -16,7 +17,7 @@ use Jenssegers\Mongodb\Query\Builder;
  * @property int role
  * @property string ApiKey
  */
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     protected $connection = 'mongodb';
 
@@ -51,5 +52,21 @@ class User extends Authenticatable
 
     public function logs(){
         return $this->belongsToMany('App\Log');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
