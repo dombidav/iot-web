@@ -72,7 +72,7 @@ class ApiUserController extends Controller
 
 
         if($user->save()) {
-            LogHelper::Log($request->header('api-key'), $user, LogHelper::User, "Store");
+            LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $user, LogHelper::User, "Store");
             return new UserResource($user);
         }
         return ResponseWrapper::wrap('User not saved', $request->all(), ResponseWrapper::SERVER_ERROR);
@@ -127,7 +127,7 @@ class ApiUserController extends Controller
 
 
         if($user->save()) {
-            LogHelper::Log($request->header('api-key'), $user, LogHelper::User, "Update");
+            LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $user, LogHelper::User, "Update");
             return new UserResource($user);
         }
     }
@@ -144,7 +144,7 @@ class ApiUserController extends Controller
         $user = User::find($id);
         if(!$user->exists) return ResponseWrapper::wrap('User not found', request()->all(), ResponseWrapper::NOT_FOUND);
         if($user->delete()) {
-            LogHelper::Log(request()->header('api-key'), $user, LogHelper::User, "Destroy");
+            LogHelper::Log(ApiKeyHelper::getUserFrom(request()->header('api-key')), $user, LogHelper::User, "Destroy");
             return new UserResource($user);
         }
         return ResponseWrapper::wrap('User not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);

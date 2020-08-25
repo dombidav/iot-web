@@ -44,4 +44,9 @@ class ApiKeyHelper
         $keySum = substr($key, 35);
         return $keySum == self::getSum($keyPart);
     }
+
+    public static function getUserFrom($apikey){
+        if(!$apikey) return null;
+        return \App\User::where('api-key', $apikey)->get();
+    }
 }
