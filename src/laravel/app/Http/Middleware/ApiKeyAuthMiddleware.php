@@ -20,7 +20,7 @@ class ApiKeyAuthMiddleware
     {
         $key = $request->header('api-key');
         if(ApiKeyHelper::isValid($key ?? '')){
-            if(User::where('api-key', $key)->count() > 0){
+            if(User::where('apiKey', $key)->count() > 0){
                 return $next($request);
             }
             else {

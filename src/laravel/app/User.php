@@ -10,7 +10,7 @@ use Jenssegers\Mongodb\Query\Builder;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
- * @method static Builder where(string $string, array|string|null $key)
+ * @method static Builder where(string $column, string $operator, string $value = '')
  * @method static User find(int $id)
  * @property string email
  * @property string password
@@ -69,14 +69,5 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
-    }
-
-    public function getApiKeyAttribute(){
-        return $this->attributes['api-key'];
-    }
-
-    public function setApiKeyAttribute($value)
-    {
-        $this->attributes['api-key'] = $value;
     }
 }
