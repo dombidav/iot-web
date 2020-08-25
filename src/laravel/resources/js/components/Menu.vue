@@ -1,29 +1,24 @@
 <template>
-    <nav id="nav">
-        <ul>
-            <!--UNLOGGED-->
-            <li v-if="!$auth.check()" v-for="(route, key) in routes.unlogged" v-bind:key="route.path">
-                <router-link  :to="{ name : route.path }" :key="key">
-                    {{route.name}}
-                </router-link>
-            </li>
-            <!--LOGGED USER-->
-            <li v-if="$auth.check(1)" v-for="(route, key) in routes.user" v-bind:key="route.path">
-                <router-link  :to="{ name : route.path }" :key="key">
-                    {{route.name}}
-                </router-link>
-            </li>
-            <!--LOGGED ADMIN-->
-            <li v-if="$auth.check(2)" v-for="(route, key) in routes.admin" v-bind:key="route.path">
-                <router-link  :to="{ name : route.path }" :key="key">
-                    {{route.name}}
-                </router-link>
-            </li>
-            <!--LOGOUT-->
-            <li v-if="$auth.check()">
-                <a href="#" @click.prevent="$auth.logout()">Logout</a>
-            </li>
-        </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <router-link :to="{name: 'home'}" class="navbar-brand">IOT-WEB</router-link>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto" v-if="$auth.check()">
+                <li>
+                    <div class="dropdown" v-if="$auth.check()">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ $auth.user().name }}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <router-link :to="{name: 'home'}" class="dropdown-item">Profile</router-link>
+                            <a class="dropdown-item" href="#" @click.prevent="$auth.logout()">Logout</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </nav>
 </template>
 <script>
@@ -33,28 +28,12 @@
                 routes: {
                     // UNLOGGED
                     unlogged: [
-                        {
-                            name: 'Inscription',
-                            path: 'register'
-                        },
-                        {
-                            name: 'Connexion',
-                            path: 'login'
-                        }
-                    ],
-                    // LOGGED USER
-                    user: [
-                        {
-                            name: 'Dashboard',
-                            path: 'dashboard'
-                        }
+                        { name: 'Register', path: 'register' },
+                        { name: 'Login', path: 'login'}
                     ],
                     // LOGGED ADMIN
                     admin: [
-                        {
-                            name: 'Dashboard',
-                            path: 'admin.dashboard'
-                        }
+                        { name: 'Dashboard', path: 'dashboard' }
                     ]
                 }
             }
@@ -64,3 +43,8 @@
         }
     }
 </script>
+<style>
+    .navbar {
+        margin-bottom: 30px;
+    }
+</style>
