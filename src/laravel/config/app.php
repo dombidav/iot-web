@@ -175,6 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Jenssegers\Mongodb\MongodbQueueServiceProvider::class,
+        JamesDordoy\LaravelVueDatatable\Providers\LaravelVueDatatableServiceProvider::class,
 
     ],
 

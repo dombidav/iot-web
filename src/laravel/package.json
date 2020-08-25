@@ -26,8 +26,10 @@
     "dependencies": {
         "@websanova/vue-auth": "^3.3.0",
         "es6-promise": "^4.2.8",
+        "laravel-vue-datatable": "^0.5.13",
         "vue-axios": "^2.1.5",
         "vue-router": "^3.4.3",
+        "vue-select": "^3.10.8",
         "vue-sidebar-menu": "^4.7.1"
     }
 }
