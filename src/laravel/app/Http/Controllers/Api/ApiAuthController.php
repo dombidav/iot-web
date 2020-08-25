@@ -1,19 +1,22 @@
 <?php
+
 namespace App\Http\Controllers\Api;
-use App\Helpers\ApiKeyHelper;
+
 use App\Http\Controllers\Controller;
-use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
+use Auth;
+use Validator;
+use App\User;
 
 class ApiAuthController extends Controller
 {
+    /**
+     * Register a new user
+     */
     public function register(Request $request)
     {
         $v = Validator::make($request->all(), [
+            'name' => 'required|min:3',
             'email' => 'required|email|unique:users',
             'password'  => 'required|min:3|confirmed',
         ]);
@@ -24,24 +27,31 @@ class ApiAuthController extends Controller
                 'errors' => $v->errors()
             ], 422);
         }
-        $user = new User;
-        $user->email = $request->input('email');
-        $user->password = Hash::make($request->input('password'));
-        $user->setRememberToken(Str::random(10));
-        $user->ApiKey = ApiKeyHelper::generate();
-        $user->role = 2;
-
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
         $user->save();
         return response()->json(['status' => 'success'], 200);
     }
+
+    /**
+     * Login user and return a token
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
         if ($token = $this->guard()->attempt($credentials)) {
-            return response()->json(['status' => 'success', 'user' => Auth::user()], 200)->header('Authorization', $token);
+            return response()->json(['status' => 'success'], 200)->header('Authorization', $token);
         }
         return response()->json(['error' => 'login_error'], 401);
     }
+
+    /**
+     * Logout User
+     */
     public function logout()
     {
         $this->guard()->logout();
@@ -50,6 +60,12 @@ class ApiAuthController extends Controller
             'msg' => 'Logged out Successfully.'
         ], 200);
     }
+
+    /**
+     * Get authenticated user
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function user(Request $request)
     {
         $user = User::find(Auth::user()->id);
@@ -58,6 +74,10 @@ class ApiAuthController extends Controller
             'data' => $user
         ]);
     }
+
+    /**
+     * Refresh JWT token
+     */
     public function refresh()
     {
         if ($token = $this->guard()->refresh()) {
@@ -67,6 +87,10 @@ class ApiAuthController extends Controller
         }
         return response()->json(['error' => 'refresh_token_error'], 401);
     }
+
+    /**
+     * Return auth guard
+     */
     private function guard()
     {
         return Auth::guard();
