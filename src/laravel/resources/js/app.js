@@ -27,6 +27,9 @@ import VueSidebarMenu from 'vue-sidebar-menu'
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 Vue.use(VueSidebarMenu)
 
+import DataTable from 'laravel-vue-datatable'
+Vue.use(DataTable)
+
 // Load Index
 Vue.component('index', Index)
 const app = new Vue({
