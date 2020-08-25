@@ -19,8 +19,8 @@ Route::get('/login', function (){
 
 // Route to handle page reload in Vue except for api routes
 Route::get('/{any?}', function (){
-    return view('admin.index');
-})->where('any', '^(?!api\/)[\/\w\.-]*')->middleware('auth');
+    return view('welcome');
+})->where('any', '^(?!api\/)[\/\w\.-]*');
 
 //Route::get('/admin', function (){
 //    return view('admin.index');
