@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Device;
 use App\Helpers\ApiKeyHelper;
 use App\Helpers\LogHelper;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\DeviceResource;
 use App\Http\Resources\UserResource;
 use App\User;
 use Illuminate\Http\JsonResponse;
@@ -19,16 +21,25 @@ class ApiUserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResponse
+     * @return UserResource|JsonResponse
      */
     public function index()
     {
-        $users = User::all();
-        return response()->json(
-            [
-                'status' => 'success',
-                'users' => $users->toArray()
-            ], 200);
+        $search = request()->query('search');
+        $search = Str::length($search) > 0 ? $search : '.*';
+
+        $users = User::where('name', 'regexp', '/' . $search . '/i');
+//$users = User::query();
+        $length = intval(request()->query('length') ?? 10);
+        $order = request()->query('column') ?? '_id';
+        if($order == 'id')
+            $order = '_id';
+        $direction = request()->query('dir') ?? 'ASC';
+
+        $users->orderBy($order, $direction);
+
+        //$users = $users->where('name', 'like', '%' . $search . '%');
+        return new UserResource($users->paginate($length));
     }
 
     /**
