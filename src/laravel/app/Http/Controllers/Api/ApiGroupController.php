@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\ApiKeyHelper;
 use App\Helpers\LogHelper;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
@@ -68,7 +69,7 @@ class ApiGroupController extends Controller
             return ResponseWrapper::wrap('Name field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
 
         if($group->save()) {
-            LogHelper::Log($request->header('api-key'), $group, LogHelper::Group, "Store");
+            LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $group, LogHelper::Group, "Store");
             return new GroupResource($group);
         }
         return ResponseWrapper::wrap('Group not saved', $request->all(), ResponseWrapper::SERVER_ERROR);
@@ -114,7 +115,7 @@ class ApiGroupController extends Controller
         $group->name = $request->input('name');
 
         if($group->save()) {
-            LogHelper::Log($request->header('api-key'), $group, LogHelper::Group, "Update");
+            LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $group, LogHelper::Group, "Update");
             return new GroupResource($group);
         }
         return ResponseWrapper::wrap('Device not updated', $request->all(), ResponseWrapper::SERVER_ERROR);
@@ -133,7 +134,7 @@ class ApiGroupController extends Controller
         if(!$workerGroup->exists)
             return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
         if($workerGroup->delete()) {
-            LogHelper::Log(request()->header('api-key'), $workerGroup, LogHelper::Group, "Destroy");
+            LogHelper::Log(ApiKeyHelper::getUserFrom(request()->header('api-key')), $workerGroup, LogHelper::Group, "Destroy");
             return new GroupResource($workerGroup);
         }
         return ResponseWrapper::wrap('Group not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Device;
 use App\Helpers;
+use App\Helpers\ApiKeyHelper;
 use App\Helpers\LogHelper;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
@@ -75,7 +76,7 @@ class ApiDeviceController extends Controller
         $device->category = $request->input('category');
 
         if($device->save()){
-            LogHelper::Log($request->header('api-key'), $device, LogHelper::Device, "Store");
+            LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $device, LogHelper::Device, "Store");
             return new DeviceResource($device);
         }
 
@@ -135,7 +136,7 @@ class ApiDeviceController extends Controller
         $device->category = $request->filled('category')? $request->input('category') : $device->category;
 
         if($device->save()){
-            LogHelper::Log($request->header('api-key'), $device, LogHelper::Device, "Update");
+            LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $device, LogHelper::Device, "Update");
             return new DeviceResource($device);
 
         }
@@ -146,7 +147,7 @@ class ApiDeviceController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Device $device
-     * @return JsonResponse|Response
+     * @return DeviceResource|JsonResponse|Response
      * @throws Exception ModelNotFoundException
      */
     public function destroy(Device $device)
@@ -154,8 +155,8 @@ class ApiDeviceController extends Controller
         if(!$device->exists)
             return ResponseWrapper::wrap('Device not found', request()->all(), ResponseWrapper::NOT_FOUND);
         if($device->delete()){
-            LogHelper::Log(request()->header('api-key'), $device, LogHelper::Device, "Destroy");
-            return response("Device deleted.");
+            LogHelper::Log(ApiKeyHelper::getUserFrom(request()->header('api-key')), $device, LogHelper::Device, "Destroy");
+            return new DeviceResource($device);
         }
         return ResponseWrapper::wrap('Device not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);
     }

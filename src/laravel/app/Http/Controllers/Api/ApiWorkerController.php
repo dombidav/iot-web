@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\ApiKeyHelper;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
 use App\Worker;
@@ -68,7 +69,7 @@ class ApiWorkerController extends Controller
         $worker->rfid = $request->input('rfid');
 
         if($worker->save()) {
-            LogHelper::Log($request->input('user_id'), $worker, LogHelper::Worker, "Store");
+            LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $worker, LogHelper::Worker, "Store");
             return new WorkerResource($worker);
         }
         return ResponseWrapper::wrap('Worker not saved', $request->all(), ResponseWrapper::SERVER_ERROR);
@@ -110,10 +111,10 @@ class ApiWorkerController extends Controller
         if(!$worker->exists)
             return ResponseWrapper::wrap('Worker not found', request()->all(), ResponseWrapper::NOT_FOUND);
         $worker->name = $request->filled('name') ? $request->input('name') : $worker->name;
-        $worker->RFID = $request->filled('rfid') ? $request->input('rfid') : $worker->RFID;
+        $worker->rfid = $request->filled('rfid') ? $request->input('rfid') : $worker->rfid;
 
         if($worker->save()) {
-            LogHelper::Log($request->input('user_id'), $worker, LogHelper::Worker, "Update");
+            LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $worker, LogHelper::Worker, "Update");
             return new WorkerResource($worker);
         }
         return ResponseWrapper::wrap('Worker not updated', $request->all(), ResponseWrapper::SERVER_ERROR);
@@ -131,7 +132,7 @@ class ApiWorkerController extends Controller
         if(!$worker->exists)
             return ResponseWrapper::wrap('Worker not found', request()->all(), ResponseWrapper::NOT_FOUND);
         if($worker->delete()) {
-            LogHelper::Log(request()->input('user_id'), $worker, LogHelper::Worker, "Destroy");
+            LogHelper::Log(ApiKeyHelper::getUserFrom(request()->header('api-key')), $worker, LogHelper::Worker, "Destroy");
             return new WorkerResource($worker);
         }
         return ResponseWrapper::wrap('Worker not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);

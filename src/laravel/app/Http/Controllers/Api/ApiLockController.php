@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Device;
+use App\Helpers\ApiKeyHelper;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DeviceResource;
@@ -71,7 +72,7 @@ class ApiLockController extends Controller
         $lock->status = $request->input('status');
 
         if($lock->save()){
-            LogHelper::Log($request->input('user_id'), $lock, LogHelper::Lock, "Store");
+            LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $lock, LogHelper::Lock, "Store");
             return new LockResource($lock);
         }
         return ResponseWrapper::wrap('Lock not saved', $request->all(), ResponseWrapper::SERVER_ERROR);
@@ -114,7 +115,7 @@ class ApiLockController extends Controller
         $lock->status = $request->filled('status') ? $request->input('status') : $lock->status;
 
         if($lock->save()){
-            LogHelper::Log($request->input('user_id'), $lock, LogHelper::Lock, "Update");
+            LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $lock, LogHelper::Lock, "Update");
             return new LockResource($lock);
         }
         return ResponseWrapper::wrap('Device not updated', $request->all(), ResponseWrapper::SERVER_ERROR);
@@ -132,8 +133,8 @@ class ApiLockController extends Controller
         if(!$lock->exists)
             return ResponseWrapper::wrap('Device not found', request()->all(), ResponseWrapper::NOT_FOUND);
         if($lock->delete()){
-            LogHelper::Log(request()->input('user_id'), $lock, LogHelper::Lock, "Destroy");
-            return "Lock deleted.";
+            LogHelper::Log(ApiKeyHelper::getUserFrom(request()->header('api-key')), $lock, LogHelper::Lock, "Destroy");
+            return new LockResource($lock);
         }
         return ResponseWrapper::wrap('Lock not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);
     }
