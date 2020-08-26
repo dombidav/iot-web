@@ -64,7 +64,7 @@ class ApiLockController extends Controller
     {
         if(!$request->filled('name'))
             return ResponseWrapper::wrap('Name field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
-        if(!$request->filled('category'))
+        if(!$request->filled('status'))
             return ResponseWrapper::wrap('Category field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
 
         $lock = new Lock();
