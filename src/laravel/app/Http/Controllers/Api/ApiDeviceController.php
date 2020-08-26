@@ -67,11 +67,12 @@ class ApiDeviceController extends Controller
      */
     public function store(Request $request)
     {
-        if(!$request->filled('name'))
-            return ResponseWrapper::wrap('Name field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
+        $device = new Device();
+        $device->name = $request->input('name') ?? Str::random();
+
         if(!$request->filled('category'))
             return ResponseWrapper::wrap('Category field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
-        $device = new Device();
+
         $device->name = $request->input('name');
         $device->category = $request->input('category');
 
