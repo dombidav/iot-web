@@ -17,7 +17,7 @@
                         <input type="text" v-model="tableProps.search" placeholder="Search User" @input="reloadTable"/>
                     </div>
                     <div class="col-md-2">
-                        <a href="#" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+                        <a href="#" class="btn btn-primary"><i class="fas fa-plus"/></a>
                     </div>
                 </div>
             </div>
@@ -26,10 +26,10 @@
                 :key="item._id"
                 @click="showRowNumber(item._id)"
                 v-for="item in data">
-                <!-- TODO: Hover Effect -->
+                <!-- TODO: Hover Effect? -->
                 <td
                     :key="column.name"
-                    v-for="column in columns">
+                    v-for="column in columns.filter(c => !c.meta || !c.meta.dontIterate)">
                     <data-table-cell
                         :value="item"
                         :name="column.name"
@@ -38,8 +38,37 @@
                         :classes="column.classes">
                     </data-table-cell>
                 </td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Operations">
+                        <a :href="`${model}/${item._id}/edit`" class="btn btn-primary"><i class="fas fa-edit"/> Edit</a>
+                        <a href="#" class="btn btn-danger">Delete <i class="fas fa-trash"/></a>
+                    </div>
+                </td>
             </tr>
             </tbody>
+            <div slot="pagination" slot-scope="{ meta = data }">
+                <nav class="row">
+                    <div class="col-md-6 text-left">
+                <span>
+                    Showing {{meta.from}} to {{meta.to}} of {{ meta.total }} Entries
+                </span>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <button
+                            :disabled="!meta.prev_page_url"
+                            class="btn btn-primary"
+                            @click="changePage(meta.prev_page_url)">
+                            Prev
+                        </button>
+                        <button
+                            :disabled="!meta.next_page_url"
+                            class="btn btn-primary ml-2"
+                            @click="changePage(meta.next_page_url)">
+                            Next
+                        </button>
+                    </div>
+                </nav>
+            </div>
         </data-table>
     </div>
 </template>
@@ -48,13 +77,12 @@
      * @link https://github.com/jamesdordoy/laravel-vue-datatable
      * @link https://jamesdordoy.github.io/laravel-vue-datatable/examples/override-filters
      */
-    import vSelect from 'vue-select';
-    import 'vue-select/dist/vue-select.css';
 
     export default {
         data() {
             return {
-                url: "/user",
+                model: 'user',
+                url: '/user',
                 search: "",
                 data: {},
                 selectOptions: [],
@@ -83,6 +111,15 @@
                         columnName: 'email',
                         orderable: true,
                     },
+                    {
+                        label: 'Operations',
+                        name : 'operations',
+                        columnName: 'email',
+                        orderable: false,
+                        meta: {
+                            dontIterate: true
+                        }
+                    }
                 ]
             }
         },
@@ -99,7 +136,7 @@
                     }
                 })
                     .then(response => {
-                        this.data = response.data;
+                        this.data = response.data
                     })
                     .catch(errors => {
                         console.log(errors.message)
@@ -110,11 +147,17 @@
                 this.getData();
             },
             showRowNumber(id) {
-                alert(`you clicked row ${id}`);
+                //alert(`you clicked row ${id}`);
+            },
+            changePage(to){
+                if(to){
+                    this.url = to;
+                    this.reloadTable();
+                }
             }
         },
         components:{
-            vSelect,
+
         }
     }
 </script>
