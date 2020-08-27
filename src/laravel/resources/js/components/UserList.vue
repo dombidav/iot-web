@@ -10,7 +10,7 @@
                 <div class="row mb-2">
                     <div class="col-md-6">
                         <select class="form-control" v-model="tableProps.length" @change="reloadTable">
-                            <option :key="page" v-for="page in perPage" >{{ page }}</option>
+                            <option :key="page" v-for="page in perPage">{{ page }}</option>
                         </select>
                     </div>
                     <div class="col-md-4">
@@ -39,40 +39,20 @@
                     </data-table-cell>
                 </td>
                 <td>
-                    <div class="btn-group" role="group" aria-label="Operations">
-                        <a :href="`${model}/${item._id}/edit`" class="btn btn-primary"><i class="fas fa-edit"/> Edit</a>
-                        <a href="#" class="btn btn-danger">Delete <i class="fas fa-trash"/></a>
-                    </div>
+                    <OperationButtons :item="item" :model="model"/>
                 </td>
             </tr>
             </tbody>
             <div slot="pagination" slot-scope="{ meta = data }">
-                <nav class="row">
-                    <div class="col-md-6 text-left">
-                <span>
-                    Showing {{meta.from}} to {{meta.to}} of {{ meta.total }} Entries
-                </span>
-                    </div>
-                    <div class="col-md-6 text-right">
-                        <button
-                            :disabled="!meta.prev_page_url"
-                            class="btn btn-primary"
-                            @click="changePage(meta.prev_page_url)">
-                            Prev
-                        </button>
-                        <button
-                            :disabled="!meta.next_page_url"
-                            class="btn btn-primary ml-2"
-                            @click="changePage(meta.next_page_url)">
-                            Next
-                        </button>
-                    </div>
-                </nav>
+                <Pagination :prev-page="() => changePage(meta.prev_page_url)" :next-page="() => changePage(meta.next_page_url)" :meta="meta"/>
             </div>
         </data-table>
     </div>
 </template>
 <script>
+    import Pagination from "./Pagination"
+    import OperationButtons from "./OperationButtons";
+
     /**
      * @link https://github.com/jamesdordoy/laravel-vue-datatable
      * @link https://jamesdordoy.github.io/laravel-vue-datatable/examples/override-filters
@@ -113,7 +93,7 @@
                     },
                     {
                         label: 'Operations',
-                        name : 'operations',
+                        name: 'operations',
                         columnName: 'email',
                         orderable: false,
                         meta: {
@@ -149,15 +129,13 @@
             showRowNumber(id) {
                 //alert(`you clicked row ${id}`);
             },
-            changePage(to){
-                if(to){
+            changePage(to) {
+                if (to) {
                     this.url = to;
                     this.reloadTable();
                 }
             }
         },
-        components:{
-
-        }
+        components: {OperationButtons, Pagination}
     }
 </script>
