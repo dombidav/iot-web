@@ -73,8 +73,9 @@ class ApiDeviceController extends Controller
         if(!$request->filled('category'))
             return ResponseWrapper::wrap('Category field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
 
-        $device->name = $request->input('name');
-        $device->category = $request->input('category');
+        foreach ($request->all() as $key => $value){
+            $device->$key = $value;
+        }
 
         if($device->save()){
             LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $device, LogHelper::Device, "Store");
@@ -134,7 +135,10 @@ class ApiDeviceController extends Controller
         if(!$device->exists)
             return ResponseWrapper::wrap('Device not found', request()->all(), ResponseWrapper::NOT_FOUND);
         $device->name = $request->filled('name')? $request->input('name') : $device->name;
-        $device->category = $request->filled('category')? $request->input('category') : $device->category;
+
+        foreach ($request->all() as $key => $value){
+            $device->$key = $value;
+        }
 
         if($device->save()){
             LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $device, LogHelper::Device, "Update");
