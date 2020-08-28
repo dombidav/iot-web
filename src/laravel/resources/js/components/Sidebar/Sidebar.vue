@@ -29,14 +29,50 @@
                         }
                     },
                     {
-                        href: '/charts',
-                        title: 'Charts',
+                        href: '/user',
+                        title: 'User Management',
+                        icon: {
+                            element: 'i',
+                            class: 'fas fa-user'
+                        }
+                    },
+                    {
+                        href: '#',
+                        title: 'Access Control',
                         icon: '',
                         child: [
                             {
-                                href: '/charts/sublink',
-                                title: 'Sub Link'
-                            }
+                                href: '/acs/worker',
+                                title: 'Workers',
+                                icon: {
+                                    element: 'i',
+                                    class: 'fas fa-user'
+                                }
+                            },
+                            {
+                                href: '/acs/lock',
+                                title: 'Locks',
+                                icon: {
+                                    element: 'i',
+                                    class: 'fas fa-lock'
+                                }
+                            },
+                            {
+                                href: '/acs/group',
+                                title: 'Groups',
+                                icon: {
+                                    element: 'i',
+                                    class: 'fas fa-group'
+                                }
+                            },
+                            {
+                                href: '/acs/log',
+                                title: 'Access Log',
+                                icon: {
+                                    element: 'i',
+                                    class: 'fas fa-list'
+                                }
+                            },
                         ]
                     }
                 ]
