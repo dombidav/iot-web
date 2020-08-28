@@ -6,20 +6,8 @@
             :data="data"
             :columns="columns"
             @onTablePropsChanged="reloadTable">
-            <div slot="filters" slot-scope="{ tableData, perPage }">
-                <div class="row mb-2">
-                    <div class="col-md-6">
-                        <select class="form-control" v-model="tableProps.length" @change="reloadTable">
-                            <option :key="page" v-for="page in perPage">{{ page }}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" v-model="tableProps.search" placeholder="Search User" @input="reloadTable"/>
-                    </div>
-                    <div class="col-md-2">
-                        <a href="#" class="btn btn-primary"><i class="fas fa-plus"/></a>
-                    </div>
-                </div>
+            <div slot="filters" slot-scope="{ perPage }">
+                <TableHeader :per-page="perPage" :reload-table="reloadTable" :table-props="tableProps"/>
             </div>
             <tbody slot="body" slot-scope="{ data }">
             <tr
@@ -50,8 +38,9 @@
     </div>
 </template>
 <script>
-    import Pagination from "./Pagination"
-    import OperationButtons from "./OperationButtons";
+    import Pagination from "./DataTable/Pagination"
+    import OperationButtons from "./DataTable/OperationButtons";
+    import TableHeader from "./DataTable/TableHeader";
 
     /**
      * @link https://github.com/jamesdordoy/laravel-vue-datatable
@@ -108,7 +97,6 @@
         },
         methods: {
             getData: function () {
-                console.log(this.tableProps.length)
                 axios.get(this.url, {
                     params: this.tableProps,
                     headers: {
@@ -136,6 +124,6 @@
                 }
             }
         },
-        components: {OperationButtons, Pagination}
+        components: {TableHeader, OperationButtons, Pagination}
     }
 </script>
