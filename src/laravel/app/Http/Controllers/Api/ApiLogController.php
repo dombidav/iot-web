@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\FailedTo;
+use App\Helpers\ApiValidator;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
 use App\Log;
@@ -34,16 +36,6 @@ class ApiLogController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
@@ -51,14 +43,12 @@ class ApiLogController extends Controller
      */
     public function store(Request $request)
     {
-        if(!$request->filled('person_id'))
-            return ResponseWrapper::wrap('Person_id field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
-        if(!$request->filled('subject_id'))
-            return ResponseWrapper::wrap('Subject_id field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
-        if(!$request->filled('description'))
-            return ResponseWrapper::wrap('Description field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
-        if(!$request->filled('model'))
-            return ResponseWrapper::wrap('Model field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
+        ApiValidator::validate($request, [
+            'person_id' => ['required'],
+            'subject_id' => ['required'],
+            'description' => ['required'],
+            'model' => ['required']
+        ]);
         $log = new Log();
         $log->person_id=$request->input('person_id');
         $log->subject_id=$request->input('subject_id');
@@ -68,7 +58,7 @@ class ApiLogController extends Controller
         if($log->save()){
             return new LogResource($log);
         }
-        return ResponseWrapper::wrap('Log not saved', $request->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Store();
     }
 
     /**
@@ -79,20 +69,9 @@ class ApiLogController extends Controller
      */
     public function show(Log $log)
     {
-        if(!$log->exists)
-            return ResponseWrapper::wrap('Log not found', request()->all(), ResponseWrapper::NOT_FOUND);
+        if(!$log || !$log->exists)
+            return FailedTo::Find();
         return new LogResource($log);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Log $log
-     * @return Response
-     */
-    public function edit(Log $log)
-    {
-        //
     }
 
     /**
@@ -104,17 +83,17 @@ class ApiLogController extends Controller
      */
     public function update(Request $request, Log $log)
     {
-        if(!$log->exists)
-            return ResponseWrapper::wrap('Log not found', request()->all(), ResponseWrapper::NOT_FOUND);
-        $log->person_id=$request->filled('person_id')? $request->input('person_id') : $log->person_id;
-        $log->subject_id=$request->filled('subject_id')? $request->input('subject_id') : $log->subject_id;
-        $log->description=$request->filled('description')? $request->input('description') : $log->description;
-        $log->model=$request->filled('model')?$request->input('model'):$log->model;
+        if(!$log || !$log->exists)
+            return FailedTo::Find();
+        $log->person_id =   $request->input('person_id')   ?? $log->person_id;
+        $log->subject_id =  $request->input('subject_id')  ?? $log->subject_id;
+        $log->description = $request->input('description') ?? $log->description;
+        $log->model =       $request->input('model')       ?? $log->model;
 
         if($log->save()){
             return new LogResource($log);
         }
-        return ResponseWrapper::wrap('Log not updated', $request->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Update();
     }
 
     /**
@@ -126,11 +105,11 @@ class ApiLogController extends Controller
      */
     public function destroy(Log $log)
     {
-        if(!$log->exists)
-            return ResponseWrapper::wrap('Log not found', request()->all(), ResponseWrapper::NOT_FOUND);
+        if(!$log || !$log->exists)
+            return FailedTo::Find();
         if($log->delete()){
             return new LogResource($log);
         }
-        return ResponseWrapper::wrap('Log not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Destroy();
     }
 }

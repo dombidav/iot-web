@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\FailedTo;
 use App\Helpers\ApiKeyHelper;
+use App\Helpers\ApiValidator;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
 use App\Worker;
@@ -43,16 +45,6 @@ class ApiWorkerController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
@@ -60,19 +52,20 @@ class ApiWorkerController extends Controller
      */
     public function store(Request $request)
     {
-        if(!$request->filled('name'))
-            return ResponseWrapper::wrap('Name field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
-        if(!$request->filled('rfid'))
-            return ResponseWrapper::wrap('rfid field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
+        ApiValidator::validate($request, [
+            'name' => ['required', 'min:3'],
+            'worker_rfid' => ['required']
+        ]);
+
         $worker = new Worker;
         $worker->name = $request->input('name');
-        $worker->rfid = $request->input('rfid');
+        $worker->worker_rfid = $request->input('worker_rfid');
 
         if($worker->save()) {
             LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $worker, LogHelper::Worker, "Store");
             return new WorkerResource($worker);
         }
-        return ResponseWrapper::wrap('Worker not saved', $request->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Store();
     }
 
     /**
@@ -84,19 +77,8 @@ class ApiWorkerController extends Controller
     public function show(Worker $worker)
     {
         if(!$worker->exists)
-            return ResponseWrapper::wrap('Worker not found', request()->all(), ResponseWrapper::NOT_FOUND);
+            return FailedTo::Find();
         return new WorkerResource($worker);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Worker $worker
-     * @return Response
-     */
-    public function edit(Worker $worker)
-    {
-        //
     }
 
     /**
@@ -109,15 +91,15 @@ class ApiWorkerController extends Controller
     public function update(Request $request, Worker $worker)
     {
         if(!$worker->exists)
-            return ResponseWrapper::wrap('Worker not found', request()->all(), ResponseWrapper::NOT_FOUND);
-        $worker->name = $request->filled('name') ? $request->input('name') : $worker->name;
-        $worker->rfid = $request->filled('rfid') ? $request->input('rfid') : $worker->rfid;
+            return FailedTo::Find();
+        $worker->name = $request->input('name') ?? $worker->name;
+        $worker->worker_rfid = $request->input('rfid') ?? $worker->worker_rfid;
 
         if($worker->save()) {
             LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $worker, LogHelper::Worker, "Update");
             return new WorkerResource($worker);
         }
-        return ResponseWrapper::wrap('Worker not updated', $request->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Update();
     }
 
     /**
@@ -130,11 +112,11 @@ class ApiWorkerController extends Controller
     public function destroy(Worker $worker)
     {
         if(!$worker->exists)
-            return ResponseWrapper::wrap('Worker not found', request()->all(), ResponseWrapper::NOT_FOUND);
+            return FailedTo::Find();
         if($worker->delete()) {
             LogHelper::Log(ApiKeyHelper::getUserFrom(request()->header('api-key')), $worker, LogHelper::Worker, "Destroy");
             return new WorkerResource($worker);
         }
-        return ResponseWrapper::wrap('Worker not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Destroy();
     }
 }

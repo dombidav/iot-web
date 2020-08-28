@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\FailedTo;
 use App\Helpers\ApiKeyHelper;
+use App\Helpers\ApiValidator;
 use App\Helpers\LogHelper;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
@@ -43,17 +45,6 @@ class ApiGroupController extends Controller
         return GroupResource::collection($groups->get());
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -62,43 +53,30 @@ class ApiGroupController extends Controller
      */
     public function store(Request $request)
     {
+        ApiValidator::validate($request, [
+            'name' => ['required', 'min:10']
+        ]);
         $group = new Group;
-
         $group->name = $request->input('name');
-        if(!$request->filled('name'))
-            return ResponseWrapper::wrap('Name field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
 
         if($group->save()) {
             LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $group, LogHelper::Group, "Store");
             return new GroupResource($group);
         }
-        return ResponseWrapper::wrap('Group not saved', $request->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Store();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param Group $workerGroup
+     * @param Group $group
      * @return GroupResource|JsonResponse
      */
-    public function show($workerGroup)
+    public function show($group)
     {
-        $workerGroupObject = Group::find($workerGroup);
-        if(!$workerGroupObject || !$workerGroupObject->exists){
-            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
-        }
-        return new GroupResource($workerGroupObject);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Group $workerGroup
-     * @return Response
-     */
-    public function edit(Group $workerGroup)
-    {
-        //
+        if(!$group || !$group->exists)
+            return FailedTo::Find();
+        return new GroupResource($group);
     }
 
     /**
@@ -110,69 +88,62 @@ class ApiGroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
-        if(!$group->exists)
-            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
-        $group->name = $request->input('name');
+        if(!$group || !$group->exists)
+            return FailedTo::Find();
+
+        $group->name = $request->input('name') ?? $group->name;
 
         if($group->save()) {
             LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $group, LogHelper::Group, "Update");
             return new GroupResource($group);
         }
-        return ResponseWrapper::wrap('Device not updated', $request->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Update();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Group $workerGroup
+     * @param Group $group
      * @return GroupResource|JsonResponse|Response
      * @throws Exception
      */
-    public function destroy($workerGroup)
+    public function destroy($group)
     {
-        $workerGroup = Group::find($workerGroup);
-        if(!$workerGroup->exists)
-            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
-        if($workerGroup->delete()) {
-            LogHelper::Log(ApiKeyHelper::getUserFrom(request()->header('api-key')), $workerGroup, LogHelper::Group, "Destroy");
-            return new GroupResource($workerGroup);
+        if(!$group || !$group->exists)
+            FailedTo::Find();
+        if($group->delete()) {
+            LogHelper::Log(ApiKeyHelper::getUserFrom(request()->header('api-key')), $group, LogHelper::Group, "Destroy");
+            return new GroupResource($group);
         }
-        return ResponseWrapper::wrap('Group not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Destroy();
     }
 
     public function addWorker(Request $request){
-        if(!$request->filled(('worker_id')))
-            return ResponseWrapper::wrap('Worker ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
-        if(!$request->filled(('group_id')))
-            return ResponseWrapper::wrap('Group ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
-        $worker = Worker::find($request->input('worker_id'));
-        if(!$worker || !$worker->exists)
-            return ResponseWrapper::wrap('Worker not found', request()->all(), ResponseWrapper::NOT_FOUND);
-        $workerGroup = Group::find($request->input('group_id'));
-        if(!$workerGroup->exists)
-            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
-        $worker->groups()->attach($workerGroup);
+        ApiValidator::validate($request, [
+            'worker_id' => ['required', 'exists:worker'],
+            'group_id' => ['required', 'exists:group']
+        ]);
 
-        if($workerGroup->save()){
-            LogHelper::Log($request->header('api-key'), $workerGroup, LogHelper::Group, "Added Worker");
-            return new GroupResource($workerGroup);
+        $worker = Worker::find($request->input('worker_id'));
+        $group = Group::find($request->input('group_id'));
+
+        $worker->groups()->attach($group);
+
+        if($group->save()){
+            LogHelper::Log($request->header('api-key'), $group, LogHelper::Group, "Added Worker");
+            return new GroupResource($group);
         }
-        return ResponseWrapper::wrap('Worker not added to Group', request()->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Attach();
     }
 
     public function addLock(Request $request){
-        if(!$request->filled('lock_id'))
-            return ResponseWrapper::wrap('Lock ID not found', request()->all(), ResponseWrapper::BAD_REQUEST) ;
-        if(!$request->filled(('group_id')))
-            return ResponseWrapper::wrap('Group ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
+        ApiValidator::validate($request, [
+            'lock_id' => ['required', 'exists:lock'],
+            'group_id' => ['required', 'exists:group']
+        ]);
 
         $lock = Lock::find($request->input('lock_id'));
-        if(!$lock || !$lock->exists)
-            return ResponseWrapper::wrap('Lock not found', request()->all(), ResponseWrapper::NOT_FOUND);
-
         $group = Group::find($request->input('group_id'));
-        if(!$group->exists)
-            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
 
         $lock->groups()->attach($group);
 
@@ -180,22 +151,17 @@ class ApiGroupController extends Controller
             LogHelper::Log($request->header('api-key'), $group, LogHelper::Group, "Added Lock");
             return new GroupResource($group);
         }
-        return ResponseWrapper::wrap('Worker not added', request()->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Attach();
     }
 
     public function deleteWorker(Request $request){
-        if(!$request->filled(('worker_id')))
-            return ResponseWrapper::wrap('Worker ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
-        if(!$request->filled(('group_id')))
-            return ResponseWrapper::wrap('Group ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
+        ApiValidator::validate($request, [
+            'worker_id' => ['required', 'exists:worker'],
+            'group_id' => ['required', 'exists:group']
+        ]);
 
         $worker = Worker::find($request->input('worker_id'));
-        if(!$worker || !$worker->exists)
-            return ResponseWrapper::wrap('Worker not found', request()->all(), ResponseWrapper::NOT_FOUND);
-
         $group = Group::find($request->input('group_id'));
-        if(!$group->exists)
-            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
 
         $group->workers()->detach($worker);
 
@@ -203,24 +169,20 @@ class ApiGroupController extends Controller
             LogHelper::Log($request->header('api-key'), $group, LogHelper::Group, "Removed Worker");
             return new GroupResource($group);
         }
-        return ResponseWrapper::wrap('Worker not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);
+
+        return FailedTo::Detach();
 
     }
 
     public function deleteLock(Request $request)
     {
-        if (!$request->filled(('lock_id')))
-            return ResponseWrapper::wrap('Lock ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
-        if (!$request->filled(('group_id')))
-            return ResponseWrapper::wrap('Group ID missing', request()->all(), ResponseWrapper::BAD_REQUEST);
+        ApiValidator::validate($request, [
+            'lock_id' => ['required', 'exists:lock'],
+            'group_id' => ['required', 'exists:group']
+        ]);
 
-        $lock = Lock::find($request->input('worker_id'));
-        if (!$lock || !$lock->exists)
-            return ResponseWrapper::wrap('Lock not found', request()->all(), ResponseWrapper::NOT_FOUND);
-
+        $lock = Lock::find($request->input('lock_id'));
         $group = Group::find($request->input('group_id'));
-        if (!$group->exists)
-            return ResponseWrapper::wrap('Group not found', request()->all(), ResponseWrapper::NOT_FOUND);
 
         $group->workers()->detach($lock);
 
@@ -228,6 +190,7 @@ class ApiGroupController extends Controller
             LogHelper::Log($request->header('api-key'), $group, LogHelper::Group, "Removed Worker");
             return new GroupResource($group);
         }
-        return ResponseWrapper::wrap('Lock not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);
+
+        return FailedTo::Detach();
     }
 }

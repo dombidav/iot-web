@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Device;
+use App\Exceptions\FailedTo;
+use App\Helpers\AccessControlSystem;
 use App\Helpers\ApiKeyHelper;
+use App\Helpers\ApiValidator;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DeviceResource;
@@ -16,6 +19,7 @@ use App\Http\Resources\LockResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Str;
 
 /**
  * Class LockController
@@ -45,16 +49,6 @@ class ApiLockController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
@@ -62,42 +56,46 @@ class ApiLockController extends Controller
      */
     public function store(Request $request)
     {
-        if(!$request->filled('name'))
-            return ResponseWrapper::wrap('Name field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
-        if(!$request->filled('status'))
-            return ResponseWrapper::wrap('Category field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
+        ApiValidator::validate($request, [
+            'device_id' => 'required'
+        ]);
 
         $lock = new Lock();
-        $lock->name = $request->input('name');
-        $lock->status = $request->input('status');
+        $lock->device_id = $request->input('device_id');
+        $lock->name = $request->input('name') ?? Str::random(16);
+        $lock->status = $request->input('status') ?? AccessControlSystem::Operational;
 
         if($lock->save()){
             LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $lock, LogHelper::Lock, "Store");
             return new LockResource($lock);
         }
-        return ResponseWrapper::wrap('Lock not saved', $request->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Store();
     }
 
     /**
      * Display the specified resource.
      *
      * @param Lock $lock
-     * @return LockResource|Response
+     * @return LockResource|JsonResponse|Response|object
      */
     public function show(Lock $lock)
     {
+        if(!$lock || !$lock->exists)
+            return FailedTo::Find();
         return new LockResource($lock);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
+     * Handles the lock keep alive message
+     * @param Request $request
      * @param Lock $lock
-     * @return Response
+     * @return LockResource|JsonResponse
      */
-    public function edit(Lock $lock)
-    {
-
+    public function keepAlive(Request $request, Lock $lock){
+        if(!$lock || !$lock->exists)
+            return FailedTo::Find();
+        $lock->setUpdatedAt(Date::now())->save();
+        return new LockResource($lock);
     }
 
     /**
@@ -109,16 +107,17 @@ class ApiLockController extends Controller
      */
     public function update(Request $request, Lock $lock)
     {
-        if(!$lock->exists)
-            return ResponseWrapper::wrap('Lock not found', request()->all(), ResponseWrapper::NOT_FOUND);
-        $lock->name = $request->filled('name')? $request->input('name') : $lock->name;
-        $lock->status = $request->filled('status') ? $request->input('status') : $lock->status;
+        if(!$lock || !$lock->exists)
+            return FailedTo::Find();
+
+        $lock->name = $request->input('name') ?? $lock->name;
+        $lock->status = $request->input('status') ?? $lock->status;
 
         if($lock->save()){
             LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $lock, LogHelper::Lock, "Update");
             return new LockResource($lock);
         }
-        return ResponseWrapper::wrap('Device not updated', $request->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Update();
     }
 
     /**
@@ -130,20 +129,12 @@ class ApiLockController extends Controller
      */
     public function destroy(Lock $lock)
     {
-        if(!$lock->exists)
-            return ResponseWrapper::wrap('Device not found', request()->all(), ResponseWrapper::NOT_FOUND);
+        if(!$lock || !$lock->exists)
+            return FailedTo::Find();
         if($lock->delete()){
             LogHelper::Log(ApiKeyHelper::getUserFrom(request()->header('api-key')), $lock, LogHelper::Lock, "Destroy");
             return new LockResource($lock);
         }
-        return ResponseWrapper::wrap('Lock not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);
-    }
-
-    public function keepAlive(Request $request, Device $device){
-        if($device->exists){
-            $device->setUpdatedAt(Date::now())->save();
-            return new DeviceResource($device);
-        }
-        return ResponseWrapper::wrap('Device not found', $request->all(), 404);
+        return FailedTo::Destroy();
     }
 }

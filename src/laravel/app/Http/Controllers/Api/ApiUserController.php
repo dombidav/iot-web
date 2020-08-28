@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Device;
+use App\Exceptions\FailedTo;
 use App\Helpers\ApiKeyHelper;
+use App\Helpers\ApiValidator;
 use App\Helpers\LogHelper;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
@@ -18,6 +20,11 @@ use Illuminate\Support\Str;
 
 class ApiUserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('key.auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,27 +36,16 @@ class ApiUserController extends Controller
         $search = Str::length($search) > 0 ? $search : '.*';
 
         $users = User::where('name', 'regexp', '/' . $search . '/i');
-//$users = User::query();
+
         $length = intval(request()->query('length') ?? 10);
         $order = request()->query('column') ?? '_id';
-        if($order == 'id')
+        if ($order == 'id')
             $order = '_id';
         $direction = request()->query('dir') ?? 'ASC';
 
         $users->orderBy($order, $direction);
 
-        //$users = $users->where('name', 'like', '%' . $search . '%');
         return new UserResource($users->paginate($length));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -60,33 +56,28 @@ class ApiUserController extends Controller
      */
     public function store(Request $request)
     {
+        ApiValidator::validate($request, [
+            'name' => ['required', 'min:3'],
+            'email' => ['required', 'email', 'unique:user'],
+            'password' => ['required', 'min:8'] //TODO: Validate ApiKey
+        ]);
+
         $user = new User();
 
         $user->name = $request->input('name');
-        if(!$request->filled('name'))
-            return ResponseWrapper::wrap('Name field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
-
         $user->email = $request->input('email');
-        $emails = User::where('email', $request->input('email'));
-        if($emails->count() != 0) return ResponseWrapper::wrap('The given email already exists', $request->all(), ResponseWrapper::CONFLICT);
-
-        if(!$request->filled('email'))
-            return ResponseWrapper::wrap('Email field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
-
         $user->password = Hash::make(request()->input('password'));
-        if(!$request->filled('password'))
-            return ResponseWrapper::wrap('Password field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
 
-        $user->remember_token = $request->filled('remember_token')? $request->input('remember_token') :  Str::random(10);
-        $user->ApiKey = $request->filled('api-key')? $request->input('api-key') : ApiKeyHelper::generate();
-        $user->role = $request->filled('role')? $request->input('role') : 2;
+        $user->remember_token = $request->input('remember_token') ?? Str::random(10);
+        $user->ApiKey = $request->input('api-key') ?? ApiKeyHelper::generate();
+        $user->role = $request->input('role') ?? 2;
 
 
-        if($user->save()) {
+        if ($user->save()) {
             LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $user, LogHelper::User, "Store");
             return new UserResource($user);
         }
-        return ResponseWrapper::wrap('User not saved', $request->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Store();
     }
 
     /**
@@ -109,7 +100,7 @@ class ApiUserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return Response
      */
     public function edit($id)
@@ -121,23 +112,23 @@ class ApiUserController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  int  $id
+     * @param int $id
      * @return UserResource|JsonResponse|Response
      */
     public function update(Request $request, $id)
     {
         $user = User::find($id);
-        if(!$user->exists) return ResponseWrapper::wrap('User not found', request()->all(), ResponseWrapper::NOT_FOUND);
+        if (!$user->exists) return ResponseWrapper::wrap('User not found', request()->all(), ResponseWrapper::NOT_FOUND);
 
-        $user->name = $request->filled('name')? $request->input('name'): $user->name;
-        $user->email = $request->filled('email')? $request->input('email'): $user->email;
-        $user->password = $request->filled('password')? Hash::make(request()->input('password')): $user->password;
-        $user->remember_token = $request->filled('remember_token')? $request->input('remember_token'): $user->remember_token;
-        $user->ApiKey = $request->filled('api-key')? $request->input('api-key'): $user->ApiKey;
-        $user->role = $request->filled('role')? $request->input('role'): $user->role;
+        $user->name = $request->filled('name') ? $request->input('name') : $user->name;
+        $user->email = $request->filled('email') ? $request->input('email') : $user->email;
+        $user->password = $request->filled('password') ? Hash::make(request()->input('password')) : $user->password;
+        $user->remember_token = $request->filled('remember_token') ? $request->input('remember_token') : $user->remember_token;
+        $user->ApiKey = $request->filled('api-key') ? $request->input('api-key') : $user->ApiKey;
+        $user->role = $request->filled('role') ? $request->input('role') : $user->role;
 
 
-        if($user->save()) {
+        if ($user->save()) {
             LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $user, LogHelper::User, "Update");
             return new UserResource($user);
         }
@@ -153,8 +144,8 @@ class ApiUserController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
-        if(!$user->exists) return ResponseWrapper::wrap('User not found', request()->all(), ResponseWrapper::NOT_FOUND);
-        if($user->delete()) {
+        if (!$user || !$user->exists) return ResponseWrapper::wrap('User not found', request()->all(), ResponseWrapper::NOT_FOUND);
+        if ($user->delete()) {
             LogHelper::Log(ApiKeyHelper::getUserFrom(request()->header('api-key')), $user, LogHelper::User, "Destroy");
             return new UserResource($user);
         }

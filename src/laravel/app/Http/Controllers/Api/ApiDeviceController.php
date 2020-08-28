@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Device;
+use App\Exceptions\FailedTo;
 use App\Helpers;
 use App\Helpers\ApiKeyHelper;
+use App\Helpers\ApiValidator;
 use App\Helpers\LogHelper;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
@@ -35,10 +37,10 @@ class ApiDeviceController extends Controller
     {
         $this->middleware('key.auth');
     }
+
     /**
      * Display a listing of the resource.
      *
-     * @param string|null $category
      * @return ResponseFactory|AnonymousResourceCollection|Response
      */
     public function index()
@@ -51,27 +53,19 @@ class ApiDeviceController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return DeviceResource|ResponseFactory|JsonResponse|Response
+     * @return DeviceResource|JsonResponse|object
      */
     public function store(Request $request)
     {
+        ApiValidator::validate($request, [
+            'category' => ['required']
+        ]);
+
         $device = new Device();
         $device->name = $request->input('name') ?? Str::random();
-
-        if(!$request->filled('category'))
-            return ResponseWrapper::wrap('Category field missing', $request->all(), ResponseWrapper::BAD_REQUEST);
 
         foreach ($request->all() as $key => $value){
             $device->$key = $value;
@@ -81,8 +75,7 @@ class ApiDeviceController extends Controller
             LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $device, LogHelper::Device, "Store");
             return new DeviceResource($device);
         }
-
-        return ResponseWrapper::wrap('Device not saved', $request->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Store();
     }
 
     /**
@@ -92,11 +85,10 @@ class ApiDeviceController extends Controller
      * @return DeviceResource|JsonResponse
      */
     public function keepAlive(Request $request, Device $device){
-        if($device->exists){
-            $device->setUpdatedAt(Date::now())->save();
-            return new DeviceResource($device);
-        }
-        return ResponseWrapper::wrap('Device not found', $request->all(), ResponseWrapper::NOT_FOUND);
+        if(!$device || !$device->exists)
+            return FailedTo::Find();
+        $device->setUpdatedAt(Date::now())->save();
+        return new DeviceResource($device);
     }
 
     /**
@@ -107,20 +99,9 @@ class ApiDeviceController extends Controller
      */
     public function show(Device $device)
     {
-        if(!$device->exists)
-            return ResponseWrapper::wrap('Device not found', request()->all(), ResponseWrapper::NOT_FOUND);
+        if(!$device || !$device->exists)
+            return FailedTo::Find();
         return new DeviceResource($device);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Device $device
-     * @return Response
-     */
-    public function edit(Device $device)
-    {
-        //
     }
 
     /**
@@ -132,9 +113,10 @@ class ApiDeviceController extends Controller
      */
     public function update(Request $request, Device $device)
     {
-        if(!$device->exists)
-            return ResponseWrapper::wrap('Device not found', request()->all(), ResponseWrapper::NOT_FOUND);
-        $device->name = $request->filled('name')? $request->input('name') : $device->name;
+        if(!$device || !$device->exists)
+            return FailedTo::Find();
+
+        $device->name = $request->input('name') ?? $device->name;
 
         foreach ($request->all() as $key => $value){
             $device->$key = $value;
@@ -145,7 +127,7 @@ class ApiDeviceController extends Controller
             return new DeviceResource($device);
 
         }
-        return ResponseWrapper::wrap('Device not updated', $request->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Update();
     }
 
     /**
@@ -157,12 +139,13 @@ class ApiDeviceController extends Controller
      */
     public function destroy(Device $device)
     {
-        if(!$device->exists)
-            return ResponseWrapper::wrap('Device not found', request()->all(), ResponseWrapper::NOT_FOUND);
+        if(!$device || !$device->exists)
+           return FailedTo::Find();
+
         if($device->delete()){
             LogHelper::Log(ApiKeyHelper::getUserFrom(request()->header('api-key')), $device, LogHelper::Device, "Destroy");
             return new DeviceResource($device);
         }
-        return ResponseWrapper::wrap('Device not deleted', request()->all(), ResponseWrapper::SERVER_ERROR);
+        return FailedTo::Destroy();
     }
 }
