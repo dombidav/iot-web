@@ -68,7 +68,7 @@ class ApiLockController extends Controller
     public function store(Request $request)
     {
         ApiValidator::validate($request, [
-            'device_id' => 'required'
+            'device_id' => ['required']
         ]);
 
         $lock = new Lock();

@@ -83,7 +83,7 @@ class ApiGroupController extends Controller
      * @param Group $group
      * @return GroupResource|JsonResponse
      */
-    public function show($group)
+    public function show(Group $group)
     {
         if(!$group || !$group->exists)
             return FailedTo::Find();
@@ -118,7 +118,7 @@ class ApiGroupController extends Controller
      * @return GroupResource|JsonResponse|Response
      * @throws Exception
      */
-    public function destroy($group)
+    public function destroy(Group $group)
     {
         if(!$group || !$group->exists)
             FailedTo::Find();
