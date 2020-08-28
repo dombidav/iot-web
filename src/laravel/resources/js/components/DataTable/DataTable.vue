@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3>User List</h3>
+        <h3>{{ model.charAt(0).toUpperCase() + model.slice(1) }} List</h3>
         <data-table
             id="data-table"
             :data="data"
@@ -27,20 +27,21 @@
                     </data-table-cell>
                 </td>
                 <td>
-                    <OperationButtons :item="item" :model="model"/>
+                    <OperationButtons :item="item" :model="$attrs.model"/>
                 </td>
             </tr>
             </tbody>
             <div slot="pagination" slot-scope="{ meta = data }">
-                <Pagination :prev-page="() => changePage(meta.prev_page_url)" :next-page="() => changePage(meta.next_page_url)" :meta="meta"/>
+                <Pagination :prev-page="() => changePage(meta.prev_page_url)"
+                            :next-page="() => changePage(meta.next_page_url)" :meta="meta"/>
             </div>
         </data-table>
     </div>
 </template>
 <script>
-    import Pagination from "./DataTable/Pagination"
-    import OperationButtons from "./DataTable/OperationButtons";
-    import TableHeader from "./DataTable/TableHeader";
+    import Pagination from "../../components/DataTable/Pagination"
+    import OperationButtons from "../../components/DataTable/OperationButtons";
+    import TableHeader from "../../components/DataTable/TableHeader";
 
     /**
      * @link https://github.com/jamesdordoy/laravel-vue-datatable
@@ -48,10 +49,15 @@
      */
 
     export default {
+        params: {
+            model: '',
+            cols: [],
+            operations: []
+        },
         data() {
             return {
-                model: 'user',
-                url: '/user',
+                model: '',
+                url: '',
                 search: "",
                 data: {},
                 selectOptions: [],
@@ -61,41 +67,38 @@
                     column: '_id',
                     dir: 'asc'
                 },
-                columns: [
-                    {
-                        label: 'ID',
-                        name: '_id',
-                        columnName: '_id',
-                        orderable: true,
-                    },
-                    {
-                        label: 'Name',
-                        name: 'name',
-                        columnName: 'name',
-                        orderable: true,
-                    },
-                    {
-                        label: 'Email',
-                        name: 'email',
-                        columnName: 'email',
-                        orderable: true,
-                    },
-                    {
-                        label: 'Operations',
-                        name: 'operations',
-                        columnName: 'email',
-                        orderable: false,
-                        meta: {
-                            dontIterate: true
-                        }
-                    }
-                ]
+                columns: []
             }
         },
         created() {
-            this.getData();
+            this.fetchModel();
+            this.fetchCols();
+            this.getData()
         },
         methods: {
+            fetchModel: function(){
+              this.model = this.$attrs.model;
+              this.url = '/' + this.$attrs.model
+            },
+            fetchCols: function() {
+                for (const col of this.$attrs.cols){
+                    this.columns.push({
+                        label: col.charAt(0).toUpperCase() + col.slice(1),
+                        name: col,
+                        columnName: col,
+                        orderable: true
+                    })
+                }
+                this.columns.push({
+                    label: 'Operations',
+                    name: 'operations',
+                    columnName: 'operations',
+                    orderable: false,
+                    meta: {
+                        dontIterate: true
+                    }
+                })
+            },
             getData: function () {
                 axios.get(this.url, {
                     params: this.tableProps,
@@ -105,6 +108,7 @@
                 })
                     .then(response => {
                         this.data = response.data
+                        console.log(response)
                     })
                     .catch(errors => {
                         console.log(errors.message)
@@ -124,6 +128,7 @@
                 }
             }
         },
-        components: {TableHeader, OperationButtons, Pagination}
+        components: {TableHeader, OperationButtons, Pagination},
+
     }
 </script>
