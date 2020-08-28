@@ -3,19 +3,23 @@
         <div class="card card-default">
             <div class="card-header"></div>
             <div class="card-body">
-                Admin panel......
+                <DataTable
+                    model="lock"
+                    :cols="['device_id', 'name', 'status']"
+                    :operations="['show','edit', 'delete']"
+                />
             </div>
         </div>
     </div>
 </template>
 <script>
-    import userList from './UserList'
+    import DataTable from '../../components/DataTable/DataTable'
     export default {
         mounted() {
             //
         },
         components: {
-            userList
+            DataTable
         }
     }
 </script>

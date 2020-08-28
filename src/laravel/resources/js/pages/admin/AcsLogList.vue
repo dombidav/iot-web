@@ -3,19 +3,23 @@
         <div class="card card-default">
             <div class="card-header"></div>
             <div class="card-body">
-                Admin panel......
+                <DataTable
+                    model="log"
+                    :cols="['created_at','person_id', 'subject_id', 'description', 'model']"
+                    :operations="['delete']"
+                />
             </div>
         </div>
     </div>
 </template>
 <script>
-    import userList from './UserList'
+    import DataTable from '../../components/DataTable/DataTable'
     export default {
         mounted() {
             //
         },
         components: {
-            userList
+            DataTable
         }
     }
 </script>
