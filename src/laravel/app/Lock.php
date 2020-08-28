@@ -13,6 +13,7 @@ use Jenssegers\Mongodb\Eloquent\Model;
  * @property mixed status
  * @property mixed updated_at
  * @property string device_id
+ * @property int timeout
  * @method static Lock findOrFail($get)
  * @method static Lock find($get)
  * @method static paginate(int $int)

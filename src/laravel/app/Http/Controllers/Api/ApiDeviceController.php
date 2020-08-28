@@ -71,6 +71,9 @@ class ApiDeviceController extends Controller
             $device->$key = $value;
         }
 
+        if(!$request->input('timeout'))
+            $device->timeout = 30;
+
         if($device->save()){
             LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $device, LogHelper::Device, "Store");
             return new DeviceResource($device);

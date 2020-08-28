@@ -65,6 +65,9 @@ class ApiLockController extends Controller
         $lock->name = $request->input('name') ?? Str::random(16);
         $lock->status = $request->input('status') ?? AccessControlSystem::Operational;
 
+        if(!$request->input('timeout'))
+            $lock->timeout = 30;
+
         if($lock->save()){
             LogHelper::Log(ApiKeyHelper::getUserFrom($request->header('api-key')), $lock, LogHelper::Lock, "Store");
             return new LockResource($lock);
