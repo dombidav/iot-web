@@ -16,6 +16,7 @@ use Jenssegers\Mongodb\Helpers\EloquentBuilder;
  * @property string category
  * @method static EloquentBuilder where(string $field, string $operator, mixed $value)
  * @method static LengthAwarePaginator paginate(int $int)
+ * @method static Device find($input)
  */
 class Device extends Model
 {

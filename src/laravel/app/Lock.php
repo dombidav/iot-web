@@ -12,6 +12,7 @@ use Jenssegers\Mongodb\Eloquent\Model;
  * @property Collection groups
  * @property mixed status
  * @property mixed updated_at
+ * @property string device_id
  * @method static Lock findOrFail($get)
  * @method static Lock find($get)
  * @method static paginate(int $int)
@@ -20,6 +21,11 @@ class Lock extends Model
 {
     protected $guarded = [];
     protected $appends = ['aliveUntil', 'isAlive'];
+
+    public static function deviceID($input)
+    {
+        return Lock::where('device_id', $input)->first();
+    }
 
     public function groups(){
         return $this->belongsToMany('App\Group');
@@ -37,5 +43,10 @@ class Lock extends Model
         $this->setUpdatedAt(Date::now());
         $this->save();
         return $this;
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'device_id';
     }
 }
