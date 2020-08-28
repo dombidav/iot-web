@@ -8,6 +8,6 @@ use Faker\Generator as Faker;
 $factory->define(Worker::class, function (Faker $faker) {
     return [
         'name'=>$faker->lastName(),
-        'RFID'=>$faker->numerify('################')
+        'worker_rfid'=>$faker->numerify('################')
     ];
 });

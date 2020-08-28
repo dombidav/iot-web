@@ -14,8 +14,9 @@ use Jenssegers\Mongodb\Query\Builder;
  * @method static Worker findOrFail($input)
  * @method static Worker find($input)
  * @property string name
- * @property string rfid
  * @property Group[] groups
+ * @property string RFID
+ * @property string worker_rfid
  */
 class Worker extends Model
 {
@@ -24,11 +25,11 @@ class Worker extends Model
     /**
      * Shorthand for Worker::firstWhere('RFID', $worker_rfid);
      * @param $worker_rfid
-     * @return Worker
+     * @return Worker|\Illuminate\Database\Eloquent\Model|Builder|object
      */
     public static function rfid($worker_rfid)
     {
-        return Worker::where('RFID', $worker_rfid)->first();
+        return Worker::where('worker_rfid', $worker_rfid)->first();
     }
 
     public function groups(){

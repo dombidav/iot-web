@@ -15,7 +15,7 @@ class CreateWorkersTable extends Migration
     {
         Schema::create('workers', function (Blueprint $table) {
             $table->string('name');
-            $table->string('RFID');
+            $table->string('worker_rfid');
             $table->timestamps();
         });
     }
