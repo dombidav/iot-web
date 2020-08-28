@@ -33,10 +33,11 @@ class ApiKeyHelper
 
     /**
      * Checks a string if it's a valid API-Key
-     * @param string $key
+     * @param string|null $key
      * @return bool
      */
-    public static function isValid(string $key){
+    public static function isValid($key){
+        if(!$key) return false;
         if(is_array($key))
             $key = $key[0];
         if(!preg_match('/^(?:[0-9a-f]{6}-){5}(?:[0-9a-f]{5})$/', $key)) return false;
