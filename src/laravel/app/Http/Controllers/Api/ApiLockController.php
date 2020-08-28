@@ -10,7 +10,9 @@ use App\Helpers\ApiValidator;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DeviceResource;
+use App\Http\Resources\WorkerResource;
 use App\Lock;
+use App\Worker;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -37,15 +39,24 @@ class ApiLockController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return AnonymousResourceCollection|Response
+     * @return LockResource|AnonymousResourceCollection|Response
      */
     public function index()
     {
-        $locks = Lock::query();
-        foreach (request()->all() as $key=>$value){
-            $locks->orWhere($key, 'like', '%'.$value.'%');
-        }
-        return LockResource::collection($locks->get());
+        $search = request()->query('search');
+        $search = Str::length($search) > 0 ? $search : '.*';
+
+        $locks = Lock::where('name', 'regexp', '/' . $search . '/i');
+
+        $length = intval(request()->query('length') ?? 10);
+        $order = request()->query('column') ?? '_id';
+        if ($order == 'id')
+            $order = '_id';
+        $direction = request()->query('dir') ?? 'ASC';
+
+        $locks->orderBy($order, $direction);
+
+        return new LockResource($locks->paginate($length));
     }
 
     /**

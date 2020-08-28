@@ -8,6 +8,7 @@ use App\Helpers\ApiValidator;
 use App\Helpers\LogHelper;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\WorkerResource;
 use App\Lock;
 use App\Worker;
 use App\Group;
@@ -17,6 +18,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\GroupResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 /**
  * Class GroupController
@@ -34,15 +36,24 @@ class ApiGroupController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return AnonymousResourceCollection
+     * @return GroupResource|AnonymousResourceCollection
      */
     public function index()
     {
-        $groups = Group::query();
-        foreach (request()->all() as $key => $value){
-            $groups->orWhere($key, 'like', '%' . $value . '%');
-        }
-        return GroupResource::collection($groups->get());
+        $search = request()->query('search');
+        $search = Str::length($search) > 0 ? $search : '.*';
+
+        $groups = Group::where('name', 'regexp', '/' . $search . '/i');
+
+        $length = intval(request()->query('length') ?? 10);
+        $order = request()->query('column') ?? '_id';
+        if ($order == 'id')
+            $order = '_id';
+        $direction = request()->query('dir') ?? 'ASC';
+
+        $groups->orderBy($order, $direction);
+
+        return new GroupResource($groups->paginate($length));
     }
 
     /**

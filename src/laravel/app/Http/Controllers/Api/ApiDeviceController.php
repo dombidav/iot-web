@@ -11,6 +11,8 @@ use App\Helpers\LogHelper;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DeviceResource;
+use App\Http\Resources\WorkerResource;
+use App\Worker;
 use Exception;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -41,15 +43,24 @@ class ApiDeviceController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return ResponseFactory|AnonymousResourceCollection|Response
+     * @return DeviceResource|ResponseFactory|AnonymousResourceCollection|Response
      */
     public function index()
     {
-        $devices = Device::query();
-       foreach (request()->all() as $key => $value){
-            $devices->orWhere($key, 'like', '%' . $value . '%');
-        }
-        return DeviceResource::collection($devices->get());
+        $search = request()->query('search');
+        $search = Str::length($search) > 0 ? $search : '.*';
+
+        $devices = Device::where('name', 'regexp', '/' . $search . '/i');
+
+        $length = intval(request()->query('length') ?? 10);
+        $order = request()->query('column') ?? '_id';
+        if ($order == 'id')
+            $order = '_id';
+        $direction = request()->query('dir') ?? 'ASC';
+
+        $devices->orderBy($order, $direction);
+
+        return new DeviceResource($devices->paginate($length));
     }
 
     /**

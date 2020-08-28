@@ -7,6 +7,8 @@ use App\Helpers\ApiKeyHelper;
 use App\Helpers\ApiValidator;
 use App\Helpers\ResponseWrapper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use App\User;
 use App\Worker;
 use Exception;
 use App\Helpers\LogHelper;
@@ -16,6 +18,7 @@ use App\Http\Requests;
 use App\Http\Resources\WorkerResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 /**
  * Class WorkerController
@@ -30,18 +33,29 @@ class ApiWorkerController extends Controller
     {
         $this->middleware('key.auth');
     }
+
     /**
      * Display a listing of the resource.
      *
-     * @return AnonymousResourceCollection|Response
+     * @param Request $request
+     * @return WorkerResource|AnonymousResourceCollection|Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $workers = Worker::query();
-        foreach (request()->all() as $key=>$value){
-            $workers->orWhere($key,'like', '%'.$value.'%');
-        }
-        return WorkerResource::collection($workers->get());
+        $search = request()->query('search');
+        $search = Str::length($search) > 0 ? $search : '.*';
+
+        $workers = Worker::where('name', 'regexp', '/' . $search . '/i');
+
+        $length = intval(request()->query('length') ?? 10);
+        $order = request()->query('column') ?? '_id';
+        if ($order == 'id')
+            $order = '_id';
+        $direction = request()->query('dir') ?? 'ASC';
+
+        $workers->orderBy($order, $direction);
+
+        return new WorkerResource($workers->paginate($length));
     }
 
     /**
