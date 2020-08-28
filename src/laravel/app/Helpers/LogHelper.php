@@ -31,7 +31,7 @@ class LogHelper
      */
     public static function Log($person, Model $subject, string $module, $description) : void {
         if(ApiKeyHelper::isValid($person))
-            $person = User::where('api-key', $person)->first();
+            $person = User::where('apiKey', $person)->first();
         else if (is_string($person))
             $person = Worker::rfid($person);
         $log = new Log([
