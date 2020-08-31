@@ -108,7 +108,7 @@
                 })
                     .then(response => {
                         this.data = response.data
-                        console.log(response)
+                        //console.log(response)
                     })
                     .catch(errors => {
                         console.log(errors.message)
