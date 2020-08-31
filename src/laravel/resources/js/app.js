@@ -19,7 +19,7 @@ Vue.use(VueRouter)
 
 // Set Vue authentication
 Vue.use(VueAxios, axios)
-axios.defaults.baseURL = `${process.env.MIX_APP_URL}/api/`
+axios.defaults.baseURL = 'http://iot-web.test/api/'
 
 Vue.use(VueAuth, auth)
 

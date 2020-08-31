@@ -64,6 +64,8 @@
                 }).then(function (x) {
                     console.log(x)
                     app.$router.push({path: '/'})
+                }).catch(function (error) {
+                    console.log(error.message)
                 })
             }
         }

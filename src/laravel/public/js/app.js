@@ -3603,6 +3603,8 @@ __webpack_require__.r(__webpack_exports__);
         app.$router.push({
           path: '/'
         });
+      })["catch"](function (error) {
+        console.log(error.message);
       });
     }
   }
@@ -66702,7 +66704,7 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.router = _router__WEBPACK_IMPORTED_MO
 vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_5__["default"]); // Set Vue authentication
 
 vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(vue_axios__WEBPACK_IMPORTED_MODULE_4___default.a, axios__WEBPACK_IMPORTED_MODULE_1___default.a);
-axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.baseURL = "".concat("http://iot-web.test", "/api/");
+axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.baseURL = 'http://iot-web.test/api/';
 vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(_websanova_vue_auth__WEBPACK_IMPORTED_MODULE_3__["default"], _auth__WEBPACK_IMPORTED_MODULE_7__["default"]);
 
 
