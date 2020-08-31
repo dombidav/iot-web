@@ -3578,8 +3578,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     login: function login() {
-      // get the redirect object
-      var redirect = this.$auth.redirect();
       var app = this;
       this.$auth.login({
         data: {
@@ -3589,17 +3587,22 @@ __webpack_require__.r(__webpack_exports__);
         success: function success() {
           // handle redirection
           app.success = true;
-          var redirectTo = 'dashboard';
           this.$router.push({
-            name: redirectTo
+            path: '/'
           });
         },
         error: function error() {
           app.has_error = true;
           app.error = res.response.data.error;
+          console.log(res.response.data.error);
         },
         rememberMe: true,
         fetchUser: true
+      }).then(function (x) {
+        console.log(x);
+        app.$router.push({
+          path: '/'
+        });
       });
     }
   }

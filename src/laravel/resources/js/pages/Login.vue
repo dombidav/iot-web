@@ -42,8 +42,6 @@
         },
         methods: {
             login() {
-                // get the redirect object
-                var redirect = this.$auth.redirect()
                 var app = this
 
                 this.$auth.login({
@@ -54,15 +52,18 @@
                     success: function() {
                         // handle redirection
                         app.success = true
-                        const redirectTo = 'dashboard'
-                        this.$router.push({name: redirectTo})
+                        this.$router.push({path: '/'})
                     },
                     error: function() {
                         app.has_error = true
                         app.error = res.response.data.error
+                        console.log(res.response.data.error)
                     },
                     rememberMe: true,
                     fetchUser: true
+                }).then(function (x) {
+                    console.log(x)
+                    app.$router.push({path: '/'})
                 })
             }
         }
