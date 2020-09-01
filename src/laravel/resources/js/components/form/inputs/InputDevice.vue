@@ -32,9 +32,17 @@
 
 <script>
     export default {
+        props:{
+            device: {}
+        },
+        created() {
+          if(this.$attrs.device)
+              this.postObject = this.$attrs.device
+        },
         data(){
             return {
                 model: 'device',
+                postObject: {},
                 response: {status: 0, data: ''},
                 deviceName: '',
                 deviceID: '',
@@ -44,22 +52,23 @@
         },
         methods: {
             postDevice: function(){
-                let postObject = {
+                this.postObject = {
                     name: this.deviceName,
                     category: this.deviceCategory,
                     device_id: this.deviceID
                 };
                 let error = '';
+                let x = this;
                 this.deviceParams.forEach(function (item) {
                     if(!item.Key && item.Value)
                         error = 'Missing key from one of the properties'
                     else
-                        postObject[item.Key] = item.Value
+                        x.postObject[item.Key] = item.Value
                 })
                 if(error)
                     this.response = {data: { message: error}}
                 else {
-                    this.axios.post('/' + this.model, postObject, {
+                    this.axios.post('/' + this.model, this.postObject, {
                         headers: {
                             'api-key': this.$auth.user().apiKey
                         }
