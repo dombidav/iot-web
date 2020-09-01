@@ -7,7 +7,7 @@
             :columns="columns"
             @onTablePropsChanged="reloadTable">
             <div slot="filters" slot-scope="{ perPage }">
-                <TableHeader :per-page="perPage" :reload-table="reloadTable" :table-props="tableProps"/>
+                <TableHeader :model="model" :per-page="perPage" :reload-table="reloadTable" :table-props="tableProps"/>
             </div>
             <tbody slot="body" slot-scope="{ data }">
             <tr
