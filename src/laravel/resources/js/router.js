@@ -10,6 +10,7 @@ import AcsLogList from "./pages/admin/AcsLogList";
 import WorkerList from "./pages/admin/WorkerList";
 import LockList from "./pages/admin/LockList";
 import GroupList from "./pages/admin/GroupList";
+import DeviceList from "./pages/admin/DeviceList";
 // Routes
 const routes = [
     {
@@ -45,6 +46,14 @@ const routes = [
         path: '/user',
         name: 'User List',
         component: UserList,
+        meta: {
+            auth: true
+        }
+    },
+    {
+        path: '/device',
+        name: 'Device List',
+        component: DeviceList,
         meta: {
             auth: true
         }
