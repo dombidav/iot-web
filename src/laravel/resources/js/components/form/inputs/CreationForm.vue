@@ -1,9 +1,9 @@
 <template>
     <div class="row mb-2">
         <InputDevice v-if="model === 'device'" :device="model"/>
-        <InputGroup v-if-else="model === 'group'" :group="model" />
-        <InputLock v-if-else="model === 'lock'" :lock="model"/>
-        <InputWorker v-if-else="model === 'worker'" :worker="model" />
+        <InputGroup v-else-if="model === 'group'" :group="model" />
+        <InputLock v-else-if="model === 'lock'" :lock="model"/>
+        <InputWorker v-else-if="model === 'worker'" :worker="model" />
     </div>
 </template>
 
