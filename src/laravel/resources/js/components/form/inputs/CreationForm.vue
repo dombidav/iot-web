@@ -1,20 +1,27 @@
 <template>
     <div class="row mb-2">
-        <InputDevice v-if="model === 'device'" />
-        <InputDevice v-if-else="model === 'group'" />
-        <InputDevice v-if-else="model === 'lock'" />
-        <InputDevice v-if-else="model === 'worker'" />
+        <InputDevice v-if="model === 'device'" :device="model"/>
+        <InputGroup v-if-else="model === 'group'" :group="model" />
+        <InputLock v-if-else="model === 'lock'" :lock="model"/>
+        <InputWorker v-if-else="model === 'worker'" :worker="model" />
     </div>
 </template>
 
 <script>
     import InputDevice from "./InputDevice";
+    import InputGroup from "./InputGroup";
+    import InputLock from "./InputLock";
+    import InputWorker from "./InputWorker";
+
     export default {
         props:{
             model: {}
         },
         components:{
-            InputDevice
+            InputDevice,
+            InputGroup,
+            InputLock,
+            InputWorker
         }
     }
 </script>
