@@ -1,9 +1,9 @@
 <template>
     <div class="row mb-2">
-        <InputDevice v-if="model === 'device'" :device="model"/>
-        <InputGroup v-else-if="model === 'group'" :group="model" />
-        <InputLock v-else-if="model === 'lock'" :lock="model"/>
-        <InputWorker v-else-if="model === 'worker'" :worker="model" />
+        <InputDevice v-if="model === 'device'" :device="model" :item="item"/>
+        <InputGroup v-else-if="model === 'group'" :group="model" :item="item" />
+        <InputLock v-else-if="model === 'lock'" :lock="model" :item="item"/>
+        <InputWorker v-else-if="model === 'worker'" :worker="model" :item="item" />
     </div>
 </template>
 
@@ -15,7 +15,8 @@
 
     export default {
         props:{
-            model: {}
+            model: {},
+            item: {}
         },
         components:{
             InputDevice,

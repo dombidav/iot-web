@@ -7,7 +7,8 @@
             :columns="columns"
             @onTablePropsChanged="reloadTable">
             <div slot="filters" slot-scope="{ perPage }">
-                <TableHeader :model="model" :per-page="perPage" :reload-table="reloadTable" :table-props="tableProps"/>
+                <CreationForm :model="model" v-show="formActive" :item="recordObject.item" />
+                <TableHeader @addClick="formSwitch" :model="model" :per-page="perPage" :reload-table="reloadTable" :table-props="tableProps"/>
             </div>
             <tbody slot="body" slot-scope="{ data }">
             <tr
@@ -27,7 +28,7 @@
                     </data-table-cell>
                 </td>
                 <td>
-                    <OperationButtons :item="item" :model="$attrs.model"/>
+                    <OperationButtons :item="item" :model="$attrs.model" @updateClicked="updateClicked"/>
                 </td>
             </tr>
             </tbody>
@@ -42,6 +43,7 @@
     import Pagination from "../../components/DataTable/Pagination"
     import OperationButtons from "../../components/DataTable/OperationButtons";
     import TableHeader from "../../components/DataTable/TableHeader";
+    import CreationForm from "../form/inputs/CreationForm";
 
     /**
      * @link https://github.com/jamesdordoy/laravel-vue-datatable
@@ -56,6 +58,7 @@
         },
         data() {
             return {
+                formActive: false,
                 model: '',
                 url: '',
                 search: "",
@@ -67,6 +70,7 @@
                     column: '_id',
                     dir: 'asc'
                 },
+                recordObject: {},
                 columns: []
             }
         },
@@ -76,6 +80,14 @@
             this.getData()
         },
         methods: {
+            updateClicked: function(x){
+                this.formActive = true
+                console.log(x)
+                this.recordObject = x
+            },
+            formSwitch: function(){
+                this.formActive = !this.formActive
+            },
             fetchModel: function(){
               this.model = this.$attrs.model;
               this.url = '/' + this.$attrs.model
@@ -128,7 +140,7 @@
                 }
             }
         },
-        components: {TableHeader, OperationButtons, Pagination},
+        components: {TableHeader, OperationButtons, Pagination, CreationForm},
 
     }
 </script>

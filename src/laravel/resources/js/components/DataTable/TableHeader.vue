@@ -1,7 +1,5 @@
 <template>
     <section>
-
-        <CreationForm :model="model" v-show="formActive"/>
         <div class="row mb-2">
             <div class="col-md-6">
                 <select aria-label="Item count" class="form-control" v-model="tableProps.length" @change="reloadTable">
@@ -13,13 +11,12 @@
                        aria-label="Search"/>
             </div>
             <div class="col-md-2">
-                <button @click="() => this.formActive = !this.formActive" class="btn btn-primary"><i class="fas fa-plus"/></button>
+                <button @click="callForm" class="btn btn-primary"><i class="fas fa-plus"/></button>
             </div>
         </div>
     </section>
 </template>
 <script>
-    import CreationForm from "../form/inputs/CreationForm";
     export default {
         name: 'TableHeader',
         props: {
@@ -30,11 +27,12 @@
         },
         data(){
             return{
-                formActive: false
             }
         },
-        components:{
-            CreationForm
+        methods:{
+            callForm: function () {
+                this.$emit('addClick')
+            }
         }
     }
 </script>

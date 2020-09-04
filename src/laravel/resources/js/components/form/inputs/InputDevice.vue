@@ -2,19 +2,23 @@
     <form class="col" method="post" @submit.prevent="postDevice">
         <div class="form-group">
             <label for="name">Device Name</label>
-            <input v-model="deviceName" type="text" class="form-control" id="name" name="name"
+            <input v-model="postObject.deviceName" type="text" class="form-control" id="name" name="name"
                    placeholder="Enter Device Name" required>
         </div>
         <div class="form-group">
             <label for="id">Device ID</label>
-            <input v-model="deviceID" type="text" class="form-control" id="id" name="id"
+            <input v-model="postObject.deviceID" type="text" class="form-control" id="id" name="id"
                    placeholder="Enter Device ID" required>
         </div>
         <div class="form-group">
             <label for="category">Category</label>
-            <input v-model="deviceCategory" type="text" class="form-control" id="category" name="category" placeholder="Category of the device">
+            <input v-model="postObject.deviceCategory" type="text" class="form-control" id="category" name="category" placeholder="Category of the device">
         </div>
-        <div class="form-group" v-for="param in deviceParams">
+        <div class="form-group">
+            <label for="timeout">Timeout</label>
+            <input v-model="postObject.deviceCategory" type="number" class="form-control" id="timeout" name="timeout" placeholder="Timeout of the device">
+        </div>
+        <div class="form-group" v-for="param in postObject.deviceParams">
             <input type="text" v-model="param.Key" class="form-control d-inline" placeholder="key" aria-label="Param">
             <input type="text" v-model="param.Value" class="form-control d-inline" placeholder="value" aria-label="Param">
             <input type="button" class="btn btn-danger" @click="() => deleteProp(param)" value="×" />
@@ -33,30 +37,32 @@
 <script>
     export default {
         props:{
-            device: {}
+            item: {}
         },
         created() {
-          if(this.$attrs.device)
-              this.postObject = this.$attrs.device
+            console.log()
+          if(this.$attrs.item)
+              this.postObject = this.$attrs.item
         },
         data(){
             return {
                 model: 'device',
-                postObject: {},
+                postObject: {
+                    deviceName: '',
+                    deviceID: '',
+                    deviceCategory: '',
+                    deviceParams: []
+                },
                 response: {status: 0, data: ''},
-                deviceName: '',
-                deviceID: '',
-                deviceCategory: '',
-                deviceParams: []
             }
         },
         methods: {
             postDevice: function(){
-                this.postObject = {
-                    name: this.deviceName,
-                    category: this.deviceCategory,
-                    device_id: this.deviceID
-                };
+                // this.postObject = {
+                //     name: this.deviceName,
+                //     category: this.deviceCategory,
+                //     device_id: this.deviceID
+                // };
                 let error = '';
                 let x = this;
                 this.deviceParams.forEach(function (item) {
@@ -68,11 +74,19 @@
                 if(error)
                     this.response = {data: { message: error}}
                 else {
-                    this.axios.post('/' + this.model, this.postObject, {
-                        headers: {
-                            'api-key': this.$auth.user().apiKey
-                        }
-                    }).then(response => this.success(response)).catch(error => this.fail(error))
+                    if(this.$attrs.item){
+                        this.axios.put('/' + this.model + '/' + this.$attrs.item.id,{
+                            headers: {
+                                'api-key': this.$auth.user().apiKey
+                            }
+                        }).then(response => this.success(response)).catch(error => this.fail(error))
+                    }else{
+                        this.axios.post('/' + this.model, this.postObject, {
+                            headers: {
+                                'api-key': this.$auth.user().apiKey
+                            }
+                        }).then(response => this.success(response)).catch(error => this.fail(error))
+                    }
                 }
 
             },
