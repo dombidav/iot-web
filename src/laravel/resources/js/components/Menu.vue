@@ -13,7 +13,7 @@
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <router-link :to="{name: 'home'}" class="dropdown-item">Profile</router-link>
-                            <a class="dropdown-item" href="#" @click.prevent="$auth.logout()">Logout</a>
+                            <a class="dropdown-item" href="#" @click.prevent="logout">Logout</a>
                         </div>
                     </div>
                 </li>
@@ -36,6 +36,12 @@
                         { name: 'Dashboard', path: 'dashboard' }
                     ]
                 }
+            }
+        },
+        methods: {
+            logout: function () {
+                $auth.logout();
+                this.$router.push({path: '/'})
             }
         },
         mounted() {
