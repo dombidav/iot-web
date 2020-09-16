@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +15,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/login', function (){
-    return view('admin.index');
+    return view('pages.login');
 })->name('login');
+
+Route::get('/', function (){
+    return view('pages.dashboard');
+})->name('home');
+
+Route::get('/logout', function (){
+        Auth::logout();
+})->name('logout');
 
 // Route to handle page reload in Vue except for api routes
 //Route::get('/{any?}', function (){
