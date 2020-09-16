@@ -1,8 +1,15 @@
 @extends('layouts.app')
 
+@push('css')
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.css') }}">
+@endpush
+
 @section('content')
     <!-- Content Header (Page header) -->
-    @include('partials.content.header')
+    @include('partials.content.header', ['title' => 'Dashboard Demo', 'breadcrumb' => ['Admin' => 'home']])
     <!-- /.content-header -->
 
     <!-- Main content -->
@@ -582,3 +589,12 @@
     </section>
     <!-- /.content -->
 @endsection
+
+@push('js')
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    <script src="{{ asset('js/pages/dashboard.js') }}"></script>
+    <!-- ChartJS -->
+    <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
+    <!-- Sparkline -->
+    <script src="{{ asset('plugins/sparklines/sparkline.js') }}"></script>
+@endpush
