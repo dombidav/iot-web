@@ -18,13 +18,16 @@ Route::get('/login', function (){
     return view('pages.login');
 })->name('login');
 
-Route::get('/', function (){
-    return view('pages.dashboard');
-})->name('home');
+Route::middleware('auth')->group(function (){
 
-Route::get('/logout', function (){
+    Route::get('/logout', function (){
         Auth::logout();
-})->name('logout');
+    })->name('logout');
+
+    Route::get('/', function (){
+        return view('pages.dashboard');
+    })->name('home');
+});
 
 // Route to handle page reload in Vue except for api routes
 //Route::get('/{any?}', function (){
